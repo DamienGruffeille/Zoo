@@ -4,12 +4,17 @@ import mongoose from 'mongoose';
 import { config } from './config/config';
 import Logging from './library/logging';
 import employeeRoutes from './routes/employeeRoutes';
+import zoneRoutes from './routes/zoneRoutes';
 
 const router = express();
 
 /** Connect to Mongo */
 mongoose
-    .connect(config.mongo.url, { retryWrites: true, w: 'majority' })
+    .connect(config.mongo.url, {
+        retryWrites: true,
+        w: 'majority',
+        dbName: 'zoo'
+    })
     .then(() => {
         Logging.info('Connected to MongoDB');
         StartServer();
@@ -63,6 +68,7 @@ const StartServer = () => {
 
     /** Routes */
     router.use('/api/employee', employeeRoutes);
+    router.use('/api/zone', zoneRoutes);
 
     /** Healthcheck */
     router.get('/ping', (req, res, next) =>

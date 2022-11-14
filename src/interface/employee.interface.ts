@@ -6,6 +6,7 @@ export default interface IEmployee extends Document {
     email: string;
     password: string;
     role: string;
+    // zone: string;
 
     isValidPassword(password: string): Promise<Error | boolean>;
 }

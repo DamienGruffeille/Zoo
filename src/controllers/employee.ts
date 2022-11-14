@@ -16,7 +16,9 @@ const createEmployee = (req: Request, res: Response, next: NextFunction) => {
 
     return employee
         .save()
-        .then((employee) => res.status(201).json({ employee }))
+        .then((employee) =>
+            res.status(201).json({ message: 'Employé(e) créé(e)', employee })
+        )
         .catch((error) => res.status(400).json({ error }));
 };
 
@@ -26,7 +28,9 @@ const getEmployee = (req: Request, res: Response, next: NextFunction) => {
     return Employee.findById(employeeId)
         .then((employee) =>
             employee
-                ? res.status(200).json({ employee })
+                ? res
+                      .status(200)
+                      .json({ message: 'Employé(e) trouvé(e)', employee })
                 : res.status(404).json({ message: 'Employee not found' })
         )
         .catch((error) => res.status(500).json({ error }));
@@ -34,7 +38,11 @@ const getEmployee = (req: Request, res: Response, next: NextFunction) => {
 
 const getAllEmployee = (req: Request, res: Response, next: NextFunction) => {
     return Employee.find()
-        .then((employees) => res.status(200).json({ employees }))
+        .then((employees) =>
+            res
+                .status(200)
+                .json({ message: 'Liste des Employé(e)s', employees })
+        )
         .catch((error) => res.status(500).json({ error }));
 };
 
@@ -48,7 +56,12 @@ const updateEmployee = (req: Request, res: Response, next: NextFunction) => {
 
                 return employee
                     .save()
-                    .then((employee) => res.status(201).json({ employee }))
+                    .then((employee) =>
+                        res.status(201).json({
+                            message: 'Employé(e) mis(e) à jour',
+                            employee
+                        })
+                    )
                     .catch((error) => res.status(400).json({ error }));
             } else {
                 res.status(404).json({ message: 'Employee not found' });
@@ -63,7 +76,9 @@ const deleteEmployee = (req: Request, res: Response, next: NextFunction) => {
     return Employee.findByIdAndDelete(employeeId)
         .then((employee) =>
             employee
-                ? res.status(201).json({ message: 'Employee deleted' })
+                ? res
+                      .status(201)
+                      .json({ message: 'Employee deleted', employee })
                 : res.status(404).json({ message: 'Employee not found' })
         )
         .catch((error) => res.status(500).json({ error }));

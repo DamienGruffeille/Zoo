@@ -6,7 +6,7 @@ const register = Joi.object({
     firstName: Joi.string().max(30).required(),
 
     email: Joi.string().email().required(),
-    /** TODO : vérif de 6 caractères min ne fonctionne pas */
+
     password: Joi.string().min(6).required(),
 
     role: Joi.string()

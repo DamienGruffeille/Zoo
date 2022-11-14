@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import Employee from '../interface/employee.interface';
 
@@ -6,13 +6,35 @@ const EmployeeSchema: Schema = new Schema(
     {
         name: { type: String, required: true },
         firstName: { type: String, required: true },
-        email: { type: String, required: true, unique: true, trim: true },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+            lowercase: true
+        },
         password: { type: String, required: true },
         role: {
             type: String,
             enum: ['Soigneur', 'Responsable', 'Vétérinaire', 'Admin'],
             required: true
         }
+        // zone: {
+        //     type: mongoose.SchemaTypes.ObjectId,
+
+        //     enum: [
+        //         'australie',
+        //         'asie',
+        //         'amerique-sud',
+        //         'desert-afrique',
+        //         'foret-amerique-nord',
+        //         'pole-nord',
+        //         'savane-afrique',
+        //         'montagne-europe',
+        //         'toutes'
+        //     ],
+        //     required: true
+        // }
     },
     { versionKey: false, timestamps: true }
 );
