@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 export default interface IEmployee extends Document {
     name: string;
@@ -6,7 +6,7 @@ export default interface IEmployee extends Document {
     email: string;
     password: string;
     role: string;
-    // zone: string;
+    zone: object;
 
     isValidPassword(password: string): Promise<Error | boolean>;
 }

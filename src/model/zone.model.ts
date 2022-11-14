@@ -3,7 +3,7 @@ import Zone from '../interface/zone.interface';
 
 const ZoneSchema: Schema = new Schema(
     {
-        _id: { type: String, required: true, unique: true },
+        _id: { type: String },
         name: { type: String, required: true }
     },
     { versionKey: false, timestamps: true }

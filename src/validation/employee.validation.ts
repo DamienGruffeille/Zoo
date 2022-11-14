@@ -11,7 +11,9 @@ const register = Joi.object({
 
     role: Joi.string()
         .valid('Soigneur', 'Responsable', 'Vétérinaire', 'Admin')
-        .required()
+        .required(),
+
+    zone: Joi.string()
 });
 
 const login = Joi.object({

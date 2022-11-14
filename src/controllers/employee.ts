@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import Employee from '../model/Employee.model';
 
 const createEmployee = (req: Request, res: Response, next: NextFunction) => {
-    const { name, firstName, email, password, role } = req.body;
+    const { name, firstName, email, password, role, zone } = req.body;
 
     const employee = new Employee({
         _id: new mongoose.Types.ObjectId(),
@@ -11,7 +11,8 @@ const createEmployee = (req: Request, res: Response, next: NextFunction) => {
         firstName,
         email,
         password,
-        role
+        role,
+        zone
     });
 
     return employee
@@ -26,6 +27,7 @@ const getEmployee = (req: Request, res: Response, next: NextFunction) => {
     const employeeId = req.params.employeeId;
 
     return Employee.findById(employeeId)
+        .populate('zone')
         .then((employee) =>
             employee
                 ? res

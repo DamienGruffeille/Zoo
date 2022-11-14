@@ -18,23 +18,24 @@ const EmployeeSchema: Schema = new Schema(
             type: String,
             enum: ['Soigneur', 'Responsable', 'Vétérinaire', 'Admin'],
             required: true
-        }
-        // zone: {
-        //     type: mongoose.SchemaTypes.ObjectId,
+        },
+        zone: {
+            type: String,
+            ref: 'Zone',
 
-        //     enum: [
-        //         'australie',
-        //         'asie',
-        //         'amerique-sud',
-        //         'desert-afrique',
-        //         'foret-amerique-nord',
-        //         'pole-nord',
-        //         'savane-afrique',
-        //         'montagne-europe',
-        //         'toutes'
-        //     ],
-        //     required: true
-        // }
+            enum: [
+                'australie',
+                'asie',
+                'amerique-sud',
+                'desert-afrique',
+                'foret-amerique-nord',
+                'pole-nord',
+                'savane-afrique',
+                'montagne-europe',
+                'toutes'
+            ],
+            required: true
+        }
     },
     { versionKey: false, timestamps: true }
 );
