@@ -1,0 +1,154 @@
+[
+    {
+        "name": "Gruffeille",
+        "firstName": "Damien",
+        "email": "dg@example.com",
+        "password": "",
+        "role": "Admin",
+        "zone": "toutes"
+    },
+    {
+        "name": "Stante",
+        "firstName": "Teddy",
+        "email": "teddystante@zoo.fr",
+        "password": "",
+        "role": "Soigneur",
+        "zone": "australie"
+    },
+    {
+        "name": "Tnam",
+        "firstName": "Olivier",
+        "email": "oliviertnam@zoo.fr",
+        "password": "",
+        "role": "Soigneur",
+        "zone": "asie"
+    },
+    {
+        "name": "Courant",
+        "firstName": "Théo",
+        "email": "théocourant@zoo.fr",
+        "password": "",
+        "role": "Soigneur",
+        "zone": "amerique-sud"
+    },
+    {
+        "name": "Idité",
+        "firstName": "Omar",
+        "email": "omaridité@zoo.fr",
+        "password": "",
+        "role": "Soigneur",
+        "zone": "desert-afrique"
+    },
+    {
+        "name": "Zona",
+        "firstName": "Harry",
+        "email": "harryzona@zoo.fr",
+        "password": "",
+        "role": "Soigneur",
+        "zone": "foret-amerique-nord"
+    },
+    {
+        "name": "Aporé",
+        "firstName": "Eve",
+        "email": "eveaporé@zoo.fr",
+        "password": "",
+        "role": "Soigneur",
+        "zone": "pole-nord"
+    },
+    {
+        "name": "Tanlelou",
+        "firstName": "Jean",
+        "email": "jeantanlelou@zoo.fr",
+        "password": "",
+        "role": "Soigneur",
+        "zone": "montagne-europe"
+    },
+    {
+        "name": "Abine",
+        "firstName": "Oscar",
+        "email": "oscarabine@zoo.fr",
+        "password": "",
+        "role": "Soigneur",
+        "zone": "savane-afrique"
+    },
+    {
+        "name": "Ivalante",
+        "firstName": "Paule",
+        "email": "pauleivalante@zoo.fr",
+        "password": "",
+        "role": "Soigneur",
+        "zone": "toutes"
+    },
+    {
+        "name": "Ofone",
+        "firstName": "Franck",
+        "email": "franckofone@zoo.fr",
+        "password": "",
+        "role": "Responsable",
+        "zone": "montagne-europe"
+    },
+    {
+        "name": "Cajou",
+        "firstName": "Benoit",
+        "email": "benoitcajou@zoo.fr",
+        "password": "",
+        "role": "Responsable",
+        "zone": "amerique-sud"
+    },
+    {
+        "name": "Danlemur",
+        "firstName": "Alphonse",
+        "email": "alphonsedanlemur@zoo.fr",
+        "password": "",
+        "role": "Responsable",
+        "zone": "pole-nord"
+    },
+    {
+        "name": "Dité",
+        "firstName": "Marie",
+        "email": "mariedité@zoo.fr",
+        "password": "",
+        "role": "Responsable",
+        "zone": "desert-afrique"
+    },
+    {
+        "name": "Sphère",
+        "firstName": "Emmy",
+        "email": "emmysphère@zoo.fr",
+        "password": "",
+        "role": "Responsable",
+        "zone": "australie"
+    },
+    {
+        "name": "Grassion",
+        "firstName": "Rémy",
+        "email": "rémygrassion@zoo.fr",
+        "password": "",
+        "role": "Responsable",
+        "zone": "savane-afrique"
+    },
+    {
+        "name": "Gladesh",
+        "firstName": "Aubin",
+        "email": "aubingladesh@zoo.fr",
+        "password": "",
+        "role": "Responsable",
+        "zone": "asie"
+    },
+    {
+        "name": "Peuplu",
+        "firstName": "Jean",
+        "email": "jeanpeuplu@zoo.fr",
+        "password": "",
+        "role": "Responsable",
+        "zone": "foret-amerique-nord"
+    },
+    {
+        "name": "Gicque",
+        "firstName": "Chantal",
+        "email": "chantalgicque@zoo.fr",
+        "password": "",
+        "role": "Vétérinaire",
+        "zone": "toutes"
+    }
+]
