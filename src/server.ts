@@ -6,6 +6,7 @@ import Logging from './library/logging';
 import employeeRoutes from './routes/employeeRoutes';
 import zoneRoutes from './routes/zoneRoutes';
 import enclosureRoutes from './routes/enclosureRoutes';
+import vivariumRoutes from './routes/vivariumRoutes';
 
 const router = express();
 
@@ -71,6 +72,7 @@ const StartServer = () => {
     router.use('/api/employee', employeeRoutes);
     router.use('/api/zone', zoneRoutes);
     router.use('/api/enclosure', enclosureRoutes);
+    router.use('/api/vivarium', vivariumRoutes);
 
     /** Healthcheck */
     router.get('/ping', (req, res, next) =>

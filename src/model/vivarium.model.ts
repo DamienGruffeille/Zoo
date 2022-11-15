@@ -1,16 +1,16 @@
-import { model, Schema } from 'mongoose';
-import EnclosureSchema from './enclosure.model';
-import Vivarium from '../interface/vivarium.interface';
+import { Schema } from 'mongoose';
+import { baseOption } from '../model/enclosure.model';
+import Enclos from './enclosure.model';
 
-const VivariumSchema: Schema = new Schema({
-    temperature: { type: Number, required: true },
-    humidity: { type: Number, required: true }
-});
-
-const VivariumSignUp = EnclosureSchema.discriminator(
-    'vivariums',
-    VivariumSchema
+const Vivarium = Enclos.discriminator(
+    'Vivarium',
+    new Schema(
+        {
+            temperature: { type: Number, required: true },
+            humidity: { type: Number, required: true }
+        },
+        baseOption
+    )
 );
 
-// module.exports = { VivariumSignUp };
-export default VivariumSignUp;
+export default Vivarium;

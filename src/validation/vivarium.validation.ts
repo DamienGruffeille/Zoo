@@ -20,7 +20,11 @@ const register = Joi.object({
 
     location: Joi.object().required(),
 
-    surface_area: Joi.number().min(0).required()
+    surface_area: Joi.number().min(0).required(),
+
+    temperature: Joi.number().required(),
+
+    humidity: Joi.number().min(0).max(100).required()
 });
 
 export default { register };

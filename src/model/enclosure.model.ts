@@ -1,14 +1,14 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { model, Schema } from 'mongoose';
 import Enclosure from '../interface/enclosure.interface';
 
-const baseOption = {
-    discriminatorKey: 'enclosure',
+export const baseOption = {
+    discriminatorKey: 'kind',
     collection: 'enclosure',
     versionKey: false,
     timestamps: true
 };
 
-const EnclosureSchema: Schema = new Schema(
+export const EnclosureSchema: Schema = new Schema(
     {
         _id: { type: String },
         name: { type: String, required: true },
@@ -44,4 +44,5 @@ const EnclosureSchema: Schema = new Schema(
     baseOption
 );
 
-export default model<Enclosure>('Enclosure', EnclosureSchema);
+const Enclos = mongoose.model('Enclosure', EnclosureSchema);
+export default Enclos;
