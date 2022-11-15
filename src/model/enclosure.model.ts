@@ -1,5 +1,4 @@
-import mongoose, { model, Schema } from 'mongoose';
-import Enclosure from '../interface/enclosure.interface';
+import mongoose, { Schema } from 'mongoose';
 
 export const baseOption = {
     discriminatorKey: 'kind',

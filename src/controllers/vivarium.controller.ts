@@ -23,7 +23,7 @@ const createVivarium = (req: Request, res: Response, next: NextFunction) => {
         .catch((error) =>
             res
                 .status(400)
-                .json({ message: 'Erreur à la création de enclos', error })
+                .json({ message: 'Erreur à la création du vivarium', error })
         );
 };
 

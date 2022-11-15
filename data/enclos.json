@@ -147,5 +147,50 @@
         "surface_area": 1000,
         "temperature": 28,
         "humidity": 70
+    },
+    {
+        "_id": "vivarium-afrique",
+        "name": "Vivarium d'Afrique",
+        "zone": "desert-afrique",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "temperature": 32,
+        "humidity": 40
+    },
+    {
+        "_id": "plage-tortues",
+        "name": "Plage des tortues",
+        "zone": "australie",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "minTemperature": 27,
+        "maxTemperature": 35
+    },
+    {
+        "_id": "banquise-ours",
+        "name": "Banquise des ours",
+        "zone": "pole-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "minTemperature": 0,
+        "maxTemperature": 4
+    },
+    {
+        "_id": "banquise-manchots",
+        "name": "Banquise des manchots",
+        "zone": "pole-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "minTemperature": 0,
+        "maxTemperature": 4
+    },
+    {
+        "_id": "banquise-phoques",
+        "name": "Banquise des phoques",
+        "zone": "pole-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "minTemperature": 0,
+        "maxTemperature": 4
     }
 ]
