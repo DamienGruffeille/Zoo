@@ -59,7 +59,7 @@ const updateEmployee = (req: Request, res: Response, next: NextFunction) => {
                 return employee
                     .save()
                     .then((employee) =>
-                        res.status(201).json({
+                        res.status(200).json({
                             message: 'Employé(e) mis(e) à jour',
                             employee
                         })
@@ -79,7 +79,7 @@ const deleteEmployee = (req: Request, res: Response, next: NextFunction) => {
         .then((employee) =>
             employee
                 ? res
-                      .status(201)
+                      .status(200)
                       .json({ message: 'Employee deleted', employee })
                 : res.status(404).json({ message: 'Employee not found' })
         )

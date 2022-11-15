@@ -5,6 +5,7 @@ import { config } from './config/config';
 import Logging from './library/logging';
 import employeeRoutes from './routes/employeeRoutes';
 import zoneRoutes from './routes/zoneRoutes';
+import enclosureRoutes from './routes/enclosureRoutes';
 
 const router = express();
 
@@ -69,6 +70,7 @@ const StartServer = () => {
     /** Routes */
     router.use('/api/employee', employeeRoutes);
     router.use('/api/zone', zoneRoutes);
+    router.use('/api/enclosure', enclosureRoutes);
 
     /** Healthcheck */
     router.get('/ping', (req, res, next) =>

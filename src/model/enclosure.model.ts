@@ -1,6 +1,13 @@
 import { model, Schema } from 'mongoose';
 import Enclosure from '../interface/enclosure.interface';
 
+const baseOption = {
+    discriminatorKey: 'enclosure',
+    collection: 'enclosure',
+    versionKey: false,
+    timestamps: true
+};
+
 const EnclosureSchema: Schema = new Schema(
     {
         _id: { type: String },
@@ -34,7 +41,7 @@ const EnclosureSchema: Schema = new Schema(
         },
         surface_area: { type: Number, required: true }
     },
-    { versionKey: false, timestamps: true }
+    baseOption
 );
 
 export default model<Enclosure>('Enclosure', EnclosureSchema);
