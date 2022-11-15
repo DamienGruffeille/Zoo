@@ -1,0 +1,196 @@
+[
+    {
+        "_id": "desert-kangourous",
+        "name": "Désert des kangourous",
+        "zone": "australie",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "foret-koalas",
+        "name": "Forêt des koalas",
+        "zone": "australie",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "foret-pandas",
+        "name": "Forêt des pandas",
+        "zone": "asie",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "foret-tigres",
+        "name": "Forêt des tigres",
+        "zone": "asie",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "foret-orang-outans",
+        "name": "Forêt des orang-outans",
+        "zone": "asie",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "marais-rhinoceros",
+        "name": "Marais des rhinocéros",
+        "zone": "asie",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "montagne-lamas",
+        "name": "Montagne des lamas",
+        "zone": "amerique-sud",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "voliere-amerique-sud",
+        "name": "Volière d'Amérique du Sud",
+        "zone": "amerique-sud",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "desert-dromadaires",
+        "name": "Désert des dromadaires",
+        "zone": "desert-afrique",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "plaine-bisons",
+        "name": "Plaine des bisons",
+        "zone": "foret-amerique-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "foret-ours",
+        "name": "Forêt des ours",
+        "zone": "foret-amerique-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "foret-loups",
+        "name": "Forêt des loups",
+        "zone": "foret-amerique-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "voliere-aigles",
+        "name": "Volière des aigles",
+        "zone": "foret-amerique-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "plaine-afrique",
+        "name": "Plaine d'Afrique",
+        "zone": "savane-afrique",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "plaine-lions",
+        "name": "Plaine des lions",
+        "zone": "savane-afrique",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "plaine-suricates",
+        "name": "Plaine des suricates",
+        "zone": "savane-afrique",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "montagne-chamois",
+        "name": "Montagne des chamois",
+        "zone": "montagne-europe",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "voliere-europe",
+        "name": "Volière d'Europe",
+        "zone": "montagne-europe",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "montagne-lynx",
+        "name": "Montagne des lynx",
+        "zone": "montagne-europe",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "plaine-loutres",
+        "name": "Plaine des loutres",
+        "zone": "savane-afrique",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000
+    },
+    {
+        "_id": "vivarium-amerique-sud",
+        "name": "Vivarium d'Amérique du Sud",
+        "zone": "amerique-sud",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "temperature": 28,
+        "humidity": 70
+    },
+    {
+        "_id": "vivarium-afrique",
+        "name": "Vivarium d'Afrique",
+        "zone": "desert-afrique",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "temperature": 32,
+        "humidity": 40
+    },
+    {
+        "_id": "plage-tortues",
+        "name": "Plage des tortues",
+        "zone": "australie",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "minTemperature": 27,
+        "maxTemperature": 35
+    },
+    {
+        "_id": "banquise-ours",
+        "name": "Banquise des ours",
+        "zone": "pole-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "minTemperature": 0,
+        "maxTemperature": 4
+    },
+    {
+        "_id": "banquise-manchots",
+        "name": "Banquise des manchots",
+        "zone": "pole-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "minTemperature": 0,
+        "maxTemperature": 4
+    },
+    {
+        "_id": "banquise-phoques",
+        "name": "Banquise des phoques",
+        "zone": "pole-nord",
+        "location": { "type": "Point", "coordinates": [-122.5, 37.37] },
+        "surface_area": 1000,
+        "minTemperature": 0,
+        "maxTemperature": 4
+    }
+]

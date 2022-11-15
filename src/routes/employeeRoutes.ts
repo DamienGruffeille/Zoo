@@ -1,5 +1,5 @@
 import express from 'express';
-import controller from '../controllers/employee';
+import controller from '../controllers/employee.controller';
 import validationMiddleware from '../middleware/validation.middleware';
 import validate from '../validation/employee.validation';
 
