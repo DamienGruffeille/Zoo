@@ -8,6 +8,7 @@ import zoneRoutes from './routes/zoneRoutes';
 import enclosureRoutes from './routes/enclosureRoutes';
 import vivariumRoutes from './routes/vivariumRoutes';
 import pondRoutes from './routes/pondRoutes';
+import specieRoutes from './routes/specieRoutes';
 
 const router = express();
 
@@ -75,6 +76,7 @@ const StartServer = () => {
     router.use('/api/enclosure', enclosureRoutes);
     router.use('/api/vivarium', vivariumRoutes);
     router.use('/api/pond', pondRoutes);
+    router.use('/api/specie', specieRoutes);
 
     /** Healthcheck */
     router.get('/ping', (req, res, next) =>

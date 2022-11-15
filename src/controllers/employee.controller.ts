@@ -73,7 +73,7 @@ const updateEmployee = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const deleteEmployee = (req: Request, res: Response, next: NextFunction) => {
-    const employeeId = req.body.employeeId;
+    const employeeId = req.params.employeeId;
 
     return Employee.findByIdAndDelete(employeeId)
         .then((employee) =>

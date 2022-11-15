@@ -1,0 +1,274 @@
+[
+    {
+        "_id": "kangourou",
+        "name": "Kangourou",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "desert-kangourous"
+    },
+    {
+        "_id": "koala",
+        "name": "Koala",
+        "sociable": false,
+        "observations": [],
+        "dangerous": false,
+        "enclosure": "foret-koalas"
+    },
+    {
+        "_id": "autruche",
+        "name": "Autruche",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "plaine-afrique"
+    },
+    {
+        "_id": "tortue",
+        "name": "Tortue",
+        "sociable": false,
+        "observations": [],
+        "dangerous": false,
+        "enclosure": "plage-tortues"
+    },
+    {
+        "_id": "panda",
+        "name": "Panda",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "foret-pandas"
+    },
+    {
+        "_id": "tigre",
+        "name": "Tigre",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "foret-tigres"
+    },
+    {
+        "_id": "orang-outan",
+        "name": "Orang-Outan",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "foret-orang-outans"
+    },
+    {
+        "_id": "rhinoceros",
+        "name": "Rhinocéros",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "marais-rhinoceros"
+    },
+    {
+        "_id": "lama",
+        "name": "Lama",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "montagne-lamas"
+    },
+    {
+        "_id": "iguane",
+        "name": "Iguane",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "vivarium-amerique-sud"
+    },
+    {
+        "_id": "boa",
+        "name": "Boa",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "vivarium-amerique-sud"
+    },
+    {
+        "_id": "ara",
+        "name": "Ara",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "voliere-amerique-sud"
+    },
+    {
+        "_id": "dromadaire",
+        "name": "Dromadaire",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "desert-dromadaires"
+    },
+    {
+        "_id": "fennec",
+        "name": "Fennec",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "desert-dromadaires"
+    },
+    {
+        "_id": "vipere",
+        "name": "Vipère",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "vivarium-afrique"
+    },
+    {
+        "_id": "bison",
+        "name": "Bison",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "plaine-bisons"
+    },
+    {
+        "_id": "ours-noir",
+        "name": "Ours noir",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "foret-ours"
+    },
+    {
+        "_id": "loup",
+        "name": "Loup",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "foret-loups"
+    },
+    {
+        "_id": "aigle",
+        "name": "Aigle",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "voliere-aigles"
+    },
+    {
+        "_id": "ours-polaire",
+        "name": "Ours polaire",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "banquise-ours"
+    },
+    {
+        "_id": "manchot",
+        "name": "Manchot",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "banquise-manchots"
+    },
+    {
+        "_id": "phoque",
+        "name": "Phoque",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "banquise-phoques"
+    },
+    {
+        "_id": "suricate",
+        "name": "Suricate",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "plaine-suricates"
+    },
+    {
+        "_id": "gnou",
+        "name": "Gnou",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "plaine-afrique"
+    },
+    {
+        "_id": "elephant",
+        "name": "Elephant",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "plaine-afrique"
+    },
+    {
+        "_id": "lion",
+        "name": "Lion",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "plaine-lions"
+    },
+    {
+        "_id": "girafe",
+        "name": "Girafe",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "plaine-afrique"
+    },
+    {
+        "_id": "zebre",
+        "name": "Zebre",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "plaine-afrique"
+    },
+    {
+        "_id": "vautour",
+        "name": "Vautour",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "voliere-europe"
+    },
+    {
+        "_id": "chamois",
+        "name": "Chamois",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "montagne-chamois"
+    },
+    {
+        "_id": "lynx",
+        "name": "Lynx",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "montagne-lynx"
+    },
+    {
+        "_id": "loutre",
+        "name": "Loutre",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "plaine-loutres"
+    },
+    {
+        "_id": "marmotte",
+        "name": "Marmotte",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "montagne-chamois"
+    },
+    {
+        "_id": "chouette",
+        "name": "Chouette",
+        "sociable": false,
+        "observations": [],
+        "dangerous": true,
+        "enclosure": "voliere-europe"
+    }
+]

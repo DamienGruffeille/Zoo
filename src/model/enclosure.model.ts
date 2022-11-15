@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 export const baseOption = {
     discriminatorKey: 'kind',
@@ -7,7 +7,7 @@ export const baseOption = {
     timestamps: true
 };
 
-export const EnclosureSchema: Schema = new Schema(
+const EnclosureSchema: Schema = new Schema(
     {
         _id: { type: String },
         name: { type: String, required: true },
@@ -43,5 +43,5 @@ export const EnclosureSchema: Schema = new Schema(
     baseOption
 );
 
-const Enclos = mongoose.model('Enclosure', EnclosureSchema);
+const Enclos = model('Enclosure', EnclosureSchema);
 export default Enclos;
