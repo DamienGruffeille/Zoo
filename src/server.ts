@@ -9,7 +9,9 @@ import enclosureRoutes from './routes/enclosureRoutes';
 import vivariumRoutes from './routes/vivariumRoutes';
 import pondRoutes from './routes/pondRoutes';
 import specieRoutes from './routes/specieRoutes';
+import animalRoutes from './routes/animalRoutes';
 
+const NAMESPACE = 'SERVER';
 const router = express();
 
 /** Connect to Mongo */
@@ -20,12 +22,12 @@ mongoose
         dbName: 'zoo'
     })
     .then(() => {
-        Logging.info('Connected to MongoDB');
+        Logging.info(NAMESPACE, 'Connected to MongoDB');
         StartServer();
     })
     .catch((error) => {
-        Logging.error('Unable to connect to MongoDB : ');
-        Logging.error(error);
+        Logging.error(NAMESPACE, 'Unable to connect to MongoDB : ');
+        Logging.error(NAMESPACE, error);
     });
 
 /** Only start the server if Mongo connects */
@@ -33,6 +35,7 @@ const StartServer = () => {
     router.use((req, res, next) => {
         /** Log the request */
         Logging.info(
+            NAMESPACE,
             `Incoming -> Method : [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`
         );
 
@@ -40,6 +43,7 @@ const StartServer = () => {
         res.on('finish', () => {
             /** Log the Response */
             Logging.info(
+                NAMESPACE,
                 `Incoming -> Method : [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - Status: [${res.statusCode}]`
             );
         });
@@ -71,12 +75,13 @@ const StartServer = () => {
     });
 
     /** Routes */
-    router.use('/api/employee', employeeRoutes);
+    router.use('/api/employes', employeeRoutes);
     router.use('/api/zone', zoneRoutes);
-    router.use('/api/enclosure', enclosureRoutes);
-    router.use('/api/vivarium', vivariumRoutes);
-    router.use('/api/pond', pondRoutes);
-    router.use('/api/specie', specieRoutes);
+    router.use('/api/enclos', enclosureRoutes);
+    router.use('/api/vivariums', vivariumRoutes);
+    router.use('/api/bassins', pondRoutes);
+    router.use('/api/especes', specieRoutes);
+    router.use('/api/animaux', animalRoutes);
 
     /** Healthcheck */
     router.get('/ping', (req, res, next) =>
@@ -86,12 +91,15 @@ const StartServer = () => {
     /** Error handling */
     router.use((req, res, next) => {
         const error = new Error('not found');
-        Logging.error(error);
+        Logging.error(NAMESPACE, error);
 
         return res.status(404).json({ message: error.message });
     });
 
     http.createServer(router).listen(config.server.port, () =>
-        Logging.info(`Server is running on port ${config.server.port}.`)
+        Logging.info(
+            NAMESPACE,
+            `Server is running on port ${config.server.port}.`
+        )
     );
 };

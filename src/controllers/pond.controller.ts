@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
+import Logging from '../library/logging';
 import Pond from '../model/pond.model';
+
+const NAMESPACE = 'POND';
 
 const createPond = (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -25,11 +28,13 @@ const createPond = (req: Request, res: Response, next: NextFunction) => {
     return pond
         .save()
         .then((pond) => res.status(201).json({ message: 'Bassin créé', pond }))
-        .catch((error) =>
-            res
-                .status(400)
-                .json({ message: 'Erreur à la création du bassin', error })
-        );
+        .catch((error) => {
+            res.status(400).json({
+                message: 'Erreur à la création du bassin',
+                error
+            });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 const getPond = (req: Request, res: Response, next: NextFunction) => {
@@ -41,7 +46,10 @@ const getPond = (req: Request, res: Response, next: NextFunction) => {
                 ? res.status(200).json({ message: 'Bassin trouvé', pond })
                 : res.status(404).json({ message: 'Bassin non trouvé' })
         )
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 const getAllPond = (req: Request, res: Response, next: NextFunction) => {
@@ -49,7 +57,10 @@ const getAllPond = (req: Request, res: Response, next: NextFunction) => {
         .then((ponds) =>
             res.status(200).json({ message: 'Liste des bassins', ponds })
         )
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 const updatePond = (req: Request, res: Response, next: NextFunction) => {
@@ -68,12 +79,18 @@ const updatePond = (req: Request, res: Response, next: NextFunction) => {
                             pond
                         })
                     )
-                    .catch((error) => res.status(400).json({ error }));
+                    .catch((error) => {
+                        res.status(400).json({ error });
+                        Logging.error(NAMESPACE, error);
+                    });
             } else {
                 res.status(404).json({ message: 'Pond not found' });
             }
         })
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 const deletePond = (req: Request, res: Response, next: NextFunction) => {
@@ -85,7 +102,10 @@ const deletePond = (req: Request, res: Response, next: NextFunction) => {
                 ? res.status(200).json({ message: 'Bassin supprimé', pond })
                 : res.status(404).json({ message: 'Bassin non trouvé' })
         )
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 export default {

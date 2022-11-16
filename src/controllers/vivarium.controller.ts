@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
+import Logging from '../library/logging';
 import Vivarium from '../model/vivarium.model';
+
+const NAMESPACE = 'VIVARIUM';
 
 const createVivarium = (req: Request, res: Response, next: NextFunction) => {
     const { _id, name, zone, location, surface_area, temperature, humidity } =
@@ -20,11 +23,13 @@ const createVivarium = (req: Request, res: Response, next: NextFunction) => {
         .then((vivarium) =>
             res.status(201).json({ message: 'Vivarium créé', vivarium })
         )
-        .catch((error) =>
-            res
-                .status(400)
-                .json({ message: 'Erreur à la création du vivarium', error })
-        );
+        .catch((error) => {
+            res.status(400).json({
+                message: 'Erreur à la création du vivarium',
+                error
+            });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 const getVivarium = (req: Request, res: Response, next: NextFunction) => {
@@ -36,7 +41,10 @@ const getVivarium = (req: Request, res: Response, next: NextFunction) => {
                 ? res.status(200).json({ message: 'Vivarium trouvé', vivarium })
                 : res.status(404).json({ message: 'Vivarium non trouvé' })
         )
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 const getAllVivarium = (req: Request, res: Response, next: NextFunction) => {
@@ -44,7 +52,10 @@ const getAllVivarium = (req: Request, res: Response, next: NextFunction) => {
         .then((vivariums) =>
             res.status(200).json({ message: 'Liste des vivariums', vivariums })
         )
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 const updateVivarium = (req: Request, res: Response, next: NextFunction) => {
@@ -63,12 +74,18 @@ const updateVivarium = (req: Request, res: Response, next: NextFunction) => {
                             vivarium
                         })
                     )
-                    .catch((error) => res.status(400).json({ error }));
+                    .catch((error) => {
+                        res.status(400).json({ error });
+                        Logging.error(NAMESPACE, error);
+                    });
             } else {
                 res.status(404).json({ message: 'Enclos not found' });
             }
         })
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 const deleteVivarium = (req: Request, res: Response, next: NextFunction) => {
@@ -82,7 +99,10 @@ const deleteVivarium = (req: Request, res: Response, next: NextFunction) => {
                       .json({ message: 'Vivarium supprimé', vivarium })
                 : res.status(404).json({ message: 'Vivarium non trouvé' })
         )
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
 };
 
 export default {
