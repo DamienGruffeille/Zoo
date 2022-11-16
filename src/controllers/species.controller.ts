@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import Logging from '../library/logging';
 import Specie from '../model/specie.model';
+import Animal from '../model/animal.model';
+import IAnimal from '../interface/animal.interface';
 
 const NAMESPACE = 'SPECIES';
 
@@ -99,10 +101,53 @@ const deleteSpecie = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
+const takeAnimalsOutside = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const specieId = req.body._id;
+    const stillInsideAnimals = req.body.stillInsideAnimals;
+
+    const outsideAnimals = await Animal.updateMany(
+        { specie: specieId, _id: { $nin: stillInsideAnimals } },
+        { position: 'Dehors' }
+    );
+    // const outsideAnimals = await outsideAnimalsArray(
+    //     animals,
+    //     stillInsideAnimals
+    // );
+    Logging.info(NAMESPACE, 'Animaux : ' + outsideAnimals);
+    res.status(200).json({
+        message: 'Liste des animaux sortis',
+        animauxSortis: outsideAnimals,
+        animauxNonSortis: stillInsideAnimals
+    });
+};
+
+// Renvoie le tableau des animaux sortis
+const outsideAnimalsArray = async (
+    animals: IAnimal[],
+    stillInsideAnimals: string[]
+) => {
+    let outsideAnimals: Array<IAnimal> = [];
+
+    animals.forEach(function (animal) {
+        stillInsideAnimals.forEach(function (animalId: string) {
+            if (animalId !== animal._id) {
+                animal.position = 'Dehors';
+                outsideAnimals.push(animal);
+            }
+        });
+        return outsideAnimals;
+    });
+};
+
 export default {
     createSpecie,
     getSpecie,
     getAllSpecies,
     updateSpecie,
-    deleteSpecie
+    deleteSpecie,
+    takeAnimalsOutside
 };
