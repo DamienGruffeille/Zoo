@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import Employee from '../model/Employee.model';
 import Logging from '../library/logging';
+import jwt from 'jsonwebtoken';
+import { config } from '../config/config';
 
 const NAMESPACE = 'Employee';
 
@@ -27,6 +29,31 @@ const createEmployee = (req: Request, res: Response, next: NextFunction) => {
             res.status(400).json({ error });
             Logging.error(NAMESPACE, error);
         });
+};
+
+const login = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+
+    const employee = await Employee.findOne({ email: email }).exec();
+
+    if (employee) {
+        if (await employee.isValidPassword(password)) {
+            const token = jwt.sign(
+                { username: employee.name, role: employee.role },
+                config.jwt.secret
+            );
+
+            return res
+                .status(200)
+                .json({ message: 'Utilisateur authentifié', token, employee });
+        } else {
+            return res
+                .status(401)
+                .json({ message: 'Utilisateur non authentifié' });
+        }
+    } else {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
 };
 
 const getEmployee = (req: Request, res: Response, next: NextFunction) => {
@@ -113,6 +140,7 @@ const deleteEmployee = (req: Request, res: Response, next: NextFunction) => {
 
 export default {
     createEmployee,
+    login,
     getEmployee,
     getAllEmployee,
     updateEmployee,
