@@ -34,6 +34,8 @@ const getEmployee = (req: Request, res: Response, next: NextFunction) => {
 
     return Employee.findById(employeeId)
         .populate('zone')
+        .select('-password')
+        .exec()
         .then((employee) =>
             employee
                 ? res
@@ -49,6 +51,8 @@ const getEmployee = (req: Request, res: Response, next: NextFunction) => {
 
 const getAllEmployee = (req: Request, res: Response, next: NextFunction) => {
     return Employee.find()
+        .select('-password')
+        .exec()
         .then((employees) =>
             res
                 .status(200)
