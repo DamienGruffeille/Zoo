@@ -3,6 +3,7 @@ import Logging from '../library/logging';
 import Specie from '../model/specie.model';
 import Animal from '../model/animal.model';
 import IAnimal from '../interface/animal.interface';
+import { Error } from 'mongoose';
 
 const NAMESPACE = 'SPECIES';
 
@@ -109,38 +110,100 @@ const takeAnimalsOutside = async (
     const specieId = req.body._id;
     const stillInsideAnimals = req.body.stillInsideAnimals;
 
-    const outsideAnimals = await Animal.updateMany(
-        { specie: specieId, _id: { $nin: stillInsideAnimals } },
-        { position: 'Dehors' }
-    );
-    // const outsideAnimals = await outsideAnimalsArray(
-    //     animals,
-    //     stillInsideAnimals
-    // );
-    Logging.info(NAMESPACE, 'Animaux : ' + outsideAnimals);
-    res.status(200).json({
-        message: 'Liste des animaux sortis',
-        animauxSortis: outsideAnimals,
-        animauxNonSortis: stillInsideAnimals
-    });
+    if (stillInsideAnimals === undefined) {
+        Logging.warn(
+            NAMESPACE,
+            'Le tableau des animaux non sortis est absent !'
+        );
+        res.status(400).json({
+            message:
+                'La liste des animaux qui ne sont pas sortis est obligatoire !'
+        });
+    } else {
+        try {
+            await Animal.updateMany(
+                { specie: specieId, _id: { $nin: stillInsideAnimals } },
+                { position: 'Dehors' }
+            )
+                .orFail()
+                .exec();
+
+            const outsideAnimals = await Animal.find({
+                specie: specieId,
+                position: 'Dehors'
+            }).exec();
+            const insideAnimals = await Animal.find({
+                specie: specieId,
+                position: 'Dedans'
+            }).exec();
+
+            res.status(200).json({
+                message: 'Liste des animaux sortis',
+                animauxSortis: outsideAnimals,
+                animauxNonSortis: insideAnimals
+            });
+        } catch (error) {
+            if (error instanceof Error.DocumentNotFoundError) {
+                Logging.error(NAMESPACE, error);
+                res.status(404).json({ error });
+            } else {
+                Logging.error(NAMESPACE, error);
+                res.status(500).json({ error });
+            }
+        }
+    }
 };
 
-// Renvoie le tableau des animaux sortis
-const outsideAnimalsArray = async (
-    animals: IAnimal[],
-    stillInsideAnimals: string[]
+const takeAnimalsInside = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
 ) => {
-    let outsideAnimals: Array<IAnimal> = [];
+    const specieId = req.body._id;
+    const stillOutsideAnimals = req.body.stillOutsideAnimals;
 
-    animals.forEach(function (animal) {
-        stillInsideAnimals.forEach(function (animalId: string) {
-            if (animalId !== animal._id) {
-                animal.position = 'Dehors';
-                outsideAnimals.push(animal);
-            }
+    if (stillOutsideAnimals === undefined) {
+        Logging.warn(
+            NAMESPACE,
+            'Le tableau des animaux non rentrés est absent !'
+        );
+        res.status(400).json({
+            message:
+                'La liste des animaux qui ne sont pas rentrés est obligatoire !'
         });
-        return outsideAnimals;
-    });
+    } else {
+        try {
+            await Animal.updateMany(
+                { specie: specieId, _id: { $nin: stillOutsideAnimals } },
+                { position: 'Dedans' }
+            )
+                .orFail()
+                .exec();
+
+            const outsideAnimals = await Animal.find({
+                specie: specieId,
+                position: 'Dehors'
+            }).exec();
+            const insideAnimals = await Animal.find({
+                specie: specieId,
+                position: 'Dedans'
+            }).exec();
+
+            res.status(200).json({
+                message: 'Liste des animaux rentrés',
+                animauxRentrés: insideAnimals,
+                animauxNonRentrés: outsideAnimals
+            });
+        } catch (error) {
+            if (error instanceof Error.DocumentNotFoundError) {
+                Logging.error(NAMESPACE, error);
+                res.status(404).json({ error });
+            } else {
+                Logging.error(NAMESPACE, error);
+                res.status(500).json({ error });
+            }
+        }
+    }
 };
 
 export default {
@@ -149,5 +212,6 @@ export default {
     getAllSpecies,
     updateSpecie,
     deleteSpecie,
-    takeAnimalsOutside
+    takeAnimalsOutside,
+    takeAnimalsInside
 };
