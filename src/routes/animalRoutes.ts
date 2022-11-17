@@ -14,5 +14,7 @@ router.get('/get/:animalId', controller.getAnimal);
 router.get('/get', controller.getAllAnimals);
 router.put('/update/:animalId', controller.updateAnimal);
 router.delete('/delete/:animalId', controller.deleteAnimal);
+router.put('/sortir', controller.takeAnimalOutside);
+router.put('/rentrer', controller.takeAnimalInside);
 
 export = router;

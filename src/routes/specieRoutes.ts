@@ -14,7 +14,9 @@ router.get('/get/:specieId', controller.getSpecie);
 router.get('/get', controller.getAllSpecies);
 router.put('/update/:specieId', controller.updateSpecie);
 router.delete('/delete/:specieId', controller.deleteSpecie);
-router.post('/sortir', controller.takeAnimalsOutside);
-router.post('/rentrer', controller.takeAnimalsInside);
+router.put('/sortir', controller.takeSpecieOutside);
+router.put('/rentrer', controller.takeSpecieInside);
+router.put('/nourrir', controller.feedSpecie);
+router.put('/stimuler', controller.stimulateSpecie);
 
 export = router;

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Animal from '../model/animal.model';
 import Logging from '../library/logging';
+import { Error } from 'mongoose';
 
 const NAMESPACE = 'Animal';
 
@@ -102,10 +103,64 @@ const deleteAnimal = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
+const takeAnimalOutside = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const animalId = req.body._id;
+
+    try {
+        await Animal.findOneAndUpdate({ _id: animalId }, { position: 'Dehors' })
+            .orFail()
+            .exec();
+
+        const animal = await Animal.findById(animalId).exec();
+
+        res.status(202).json({ message: 'Animal sorti :', animal });
+    } catch (error) {
+        if (error instanceof Error.DocumentNotFoundError) {
+            Logging.error(NAMESPACE, error);
+            res.status(404).json({ error });
+        } else {
+            Logging.error(NAMESPACE, error);
+            res.status(500).json({ error });
+        }
+    }
+};
+
+const takeAnimalInside = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const animalId = req.body._id;
+
+    try {
+        await Animal.findOneAndUpdate({ _id: animalId }, { position: 'Dedans' })
+            .orFail()
+            .exec();
+
+        const animal = await Animal.findById(animalId).exec();
+
+        res.status(202).json({ message: 'Animal rentré :', animal });
+    } catch (error) {
+        if (error instanceof Error.DocumentNotFoundError) {
+            Logging.error(NAMESPACE, error);
+            res.status(404).json({ error });
+        } else {
+            Logging.error(NAMESPACE, error);
+            res.status(500).json({ error });
+        }
+    }
+};
+
 export default {
     createAnimal,
     getAnimal,
     getAllAnimals,
     updateAnimal,
-    deleteAnimal
+    deleteAnimal,
+    takeAnimalOutside,
+    takeAnimalInside
 };

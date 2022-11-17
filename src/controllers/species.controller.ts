@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import Logging from '../library/logging';
 import Specie from '../model/specie.model';
 import Animal from '../model/animal.model';
-import IAnimal from '../interface/animal.interface';
 import { Error } from 'mongoose';
 
 const NAMESPACE = 'SPECIES';
@@ -102,7 +101,7 @@ const deleteSpecie = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
-const takeAnimalsOutside = async (
+const takeSpecieOutside = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -110,7 +109,7 @@ const takeAnimalsOutside = async (
     const specieId = req.body._id;
     const stillInsideAnimals = req.body.stillInsideAnimals;
 
-    if (stillInsideAnimals === undefined) {
+    if (!stillInsideAnimals) {
         Logging.warn(
             NAMESPACE,
             'Le tableau des animaux non sortis est absent !'
@@ -137,7 +136,7 @@ const takeAnimalsOutside = async (
                 position: 'Dedans'
             }).exec();
 
-            res.status(200).json({
+            res.status(202).json({
                 message: 'Liste des animaux sortis',
                 animauxSortis: outsideAnimals,
                 animauxNonSortis: insideAnimals
@@ -154,7 +153,7 @@ const takeAnimalsOutside = async (
     }
 };
 
-const takeAnimalsInside = async (
+const takeSpecieInside = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -162,7 +161,7 @@ const takeAnimalsInside = async (
     const specieId = req.body._id;
     const stillOutsideAnimals = req.body.stillOutsideAnimals;
 
-    if (stillOutsideAnimals === undefined) {
+    if (!stillOutsideAnimals) {
         Logging.warn(
             NAMESPACE,
             'Le tableau des animaux non rentrés est absent !'
@@ -206,12 +205,58 @@ const takeAnimalsInside = async (
     }
 };
 
+const feedSpecie = async (req: Request, res: Response, next: NextFunction) => {
+    const specieId = req.body._id;
+
+    try {
+        const specie = await Specie.findById(specieId).orFail().exec();
+
+        res.status(201).json({
+            message: 'Nourissage effectué pour : ' + specie.name
+        });
+    } catch (error) {
+        if (error instanceof Error.DocumentNotFoundError) {
+            Logging.error(NAMESPACE, error);
+            res.status(404).json({ error });
+        } else {
+            Logging.error(NAMESPACE, error);
+            res.status(500).json({ error });
+        }
+    }
+};
+
+const stimulateSpecie = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const specieId = req.body._id;
+
+    try {
+        const specie = await Specie.findById(specieId).orFail().exec();
+
+        res.status(201).json({
+            message: 'Stimulation effectuée pour : ' + specie.name
+        });
+    } catch (error) {
+        if (error instanceof Error.DocumentNotFoundError) {
+            Logging.error(NAMESPACE, error);
+            res.status(404).json({ error });
+        } else {
+            Logging.error(NAMESPACE, error);
+            res.status(500).json({ error });
+        }
+    }
+};
+
 export default {
     createSpecie,
     getSpecie,
     getAllSpecies,
     updateSpecie,
     deleteSpecie,
-    takeAnimalsOutside,
-    takeAnimalsInside
+    takeSpecieOutside,
+    takeSpecieInside,
+    feedSpecie,
+    stimulateSpecie
 };
