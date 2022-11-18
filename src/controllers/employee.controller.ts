@@ -39,7 +39,12 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     if (employee) {
         if (await employee.isValidPassword(password)) {
             const token = jwt.sign(
-                { username: employee.name, role: employee.role },
+                {
+                    UserInfo: {
+                        username: employee.name,
+                        role: employee.role
+                    }
+                },
                 config.jwt.secret
             );
 
