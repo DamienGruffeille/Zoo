@@ -35,11 +35,13 @@ router.delete(
 router.put(
     '/sortir',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    validationMiddleware(validate.movement),
     controller.takeAnimalOutside
 );
 router.put(
     '/rentrer',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    validationMiddleware(validate.movement),
     controller.takeAnimalInside
 );
 

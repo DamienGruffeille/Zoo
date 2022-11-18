@@ -55,4 +55,8 @@ const register = Joi.object({
     position: Joi.string().valid('Dedans', 'Dehors', 'Infirmerie').required()
 });
 
-export default { register };
+const movement = Joi.object({
+    _id: Joi.string().required()
+});
+
+export default { register, movement };

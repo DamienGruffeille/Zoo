@@ -110,21 +110,34 @@ const takeAnimalOutside = async (
 ) => {
     const animalId = req.body._id;
 
-    try {
-        await Animal.findOneAndUpdate({ _id: animalId }, { position: 'Dehors' })
-            .orFail()
-            .exec();
+    const animalPosition = await Animal.findById(animalId)
+        .select('position')
+        .exec();
 
-        const animal = await Animal.findById(animalId).exec();
+    Logging.info(NAMESPACE, 'Animal position = ' + animalPosition);
 
-        res.status(202).json({ message: 'Animal sorti :', animal });
-    } catch (error) {
-        if (error instanceof Error.DocumentNotFoundError) {
-            Logging.error(NAMESPACE, error);
-            res.status(404).json({ error });
-        } else {
-            Logging.error(NAMESPACE, error);
-            res.status(500).json({ error });
+    if (animalPosition?.position === 'Dehors') {
+        res.status(400).json({ message: "L'animal est déjà dehors" });
+    } else {
+        try {
+            await Animal.findOneAndUpdate(
+                { _id: animalId },
+                { position: 'Dehors' }
+            )
+                .orFail()
+                .exec();
+
+            const animal = await Animal.findById(animalId).exec();
+
+            res.status(202).json({ message: 'Animal sorti :', animal });
+        } catch (error) {
+            if (error instanceof Error.DocumentNotFoundError) {
+                Logging.error(NAMESPACE, error);
+                res.status(404).json({ error });
+            } else {
+                Logging.error(NAMESPACE, error);
+                res.status(500).json({ error });
+            }
         }
     }
 };
@@ -135,22 +148,32 @@ const takeAnimalInside = async (
     next: NextFunction
 ) => {
     const animalId = req.body._id;
+    const animalPosition = await Animal.findById(animalId)
+        .select('position')
+        .exec();
 
-    try {
-        await Animal.findOneAndUpdate({ _id: animalId }, { position: 'Dedans' })
-            .orFail()
-            .exec();
+    if (animalPosition?.position === 'Dedans') {
+        res.status(400).json({ message: "L'animal est déjà à l'intérieur" });
+    } else {
+        try {
+            await Animal.findOneAndUpdate(
+                { _id: animalId },
+                { position: 'Dedans' }
+            )
+                .orFail()
+                .exec();
 
-        const animal = await Animal.findById(animalId).exec();
+            const animal = await Animal.findById(animalId).exec();
 
-        res.status(202).json({ message: 'Animal rentré :', animal });
-    } catch (error) {
-        if (error instanceof Error.DocumentNotFoundError) {
-            Logging.error(NAMESPACE, error);
-            res.status(404).json({ error });
-        } else {
-            Logging.error(NAMESPACE, error);
-            res.status(500).json({ error });
+            res.status(202).json({ message: 'Animal rentré :', animal });
+        } catch (error) {
+            if (error instanceof Error.DocumentNotFoundError) {
+                Logging.error(NAMESPACE, error);
+                res.status(404).json({ error });
+            } else {
+                Logging.error(NAMESPACE, error);
+                res.status(500).json({ error });
+            }
         }
     }
 };
