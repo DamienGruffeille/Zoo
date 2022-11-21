@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import Animal from '../model/animal.model';
-import Logging from '../library/logging';
 import { Error } from 'mongoose';
+import { createEvent } from '../functions/createEvent';
+import Logging from '../library/logging';
+import Animal from '../model/animal.model';
+import Specie from '../interface/specie.interface';
+import ISpecie from '../interface/specie.interface';
+import { getUserName } from '../functions/getUserName';
 
 const NAMESPACE = 'Animal';
 
@@ -108,7 +112,7 @@ const takeAnimalOutside = async (
     res: Response,
     next: NextFunction
 ) => {
-    const animalId = req.body._id;
+    const animalId: string = req.body._id;
 
     const animalPosition = await Animal.findById(animalId)
         .select('position')
@@ -120,16 +124,35 @@ const takeAnimalOutside = async (
         res.status(400).json({ message: "L'animal est déjà dehors" });
     } else {
         try {
-            await Animal.findOneAndUpdate(
+            /** Je cherche l'animal par son ID puis update sa position */
+            const animalUpdated = await Animal.findOneAndUpdate(
                 { _id: animalId },
                 { position: 'Dehors' }
             )
                 .orFail()
+                .populate('specie')
                 .exec();
 
-            const animal = await Animal.findById(animalId).exec();
+            const specie: any = animalUpdated.specie;
 
-            res.status(202).json({ message: 'Animal sorti :', animal });
+            if (req.headers.authorization) {
+                Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+
+                const newEvent = await createEvent(
+                    await getUserName(req.headers.authorization),
+                    specie.enclosure,
+                    specie,
+                    animalId,
+                    'Sortie',
+                    ''
+                );
+                res.status(202).json({
+                    message: 'Animal sorti : ' + animalUpdated.name,
+                    newEvent
+                });
+            } else {
+                res.status(404).json({ message: 'Animal non sorti' });
+            }
         } catch (error) {
             if (error instanceof Error.DocumentNotFoundError) {
                 Logging.error(NAMESPACE, error);
@@ -156,16 +179,34 @@ const takeAnimalInside = async (
         res.status(400).json({ message: "L'animal est déjà à l'intérieur" });
     } else {
         try {
-            await Animal.findOneAndUpdate(
+            const updatedAnimal = await Animal.findOneAndUpdate(
                 { _id: animalId },
                 { position: 'Dedans' }
             )
                 .orFail()
+                .populate('specie')
                 .exec();
 
-            const animal = await Animal.findById(animalId).exec();
+            const specie: any = updatedAnimal.specie;
 
-            res.status(202).json({ message: 'Animal rentré :', animal });
+            if (req.headers.authorization) {
+                Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+
+                const newEvent = await createEvent(
+                    await getUserName(req.headers.authorization),
+                    specie.enclosure,
+                    specie,
+                    animalId,
+                    'Entrée',
+                    ''
+                );
+                res.status(202).json({
+                    message: 'Animal rentré : ' + updatedAnimal.name,
+                    newEvent
+                });
+            } else {
+                res.status(404).json({ message: 'Animal non rentré' });
+            }
         } catch (error) {
             if (error instanceof Error.DocumentNotFoundError) {
                 Logging.error(NAMESPACE, error);

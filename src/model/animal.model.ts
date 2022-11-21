@@ -9,7 +9,7 @@ const AnimalSchema: Schema = new Schema(
         name: { type: String, required: true },
         specie: {
             type: String,
-            ref: 'species',
+            ref: 'Species',
             enum: [
                 'kangourou',
                 'koala',

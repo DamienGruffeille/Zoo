@@ -3,6 +3,8 @@ import Logging from '../library/logging';
 import Specie from '../model/specie.model';
 import Animal from '../model/animal.model';
 import { Error } from 'mongoose';
+import { createEvent } from '../functions/createEvent';
+import { getUserName } from '../functions/getUserName';
 
 const NAMESPACE = 'SPECIES';
 
@@ -210,10 +212,27 @@ const feedSpecie = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const specie = await Specie.findById(specieId).orFail().exec();
+        const enclosure: any = specie.enclosure;
+        const animals = 'bibi';
 
-        res.status(201).json({
-            message: 'Nourissage effectué pour : ' + specie.name
-        });
+        if (req.headers.authorization) {
+            Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+
+            const newEvent = await createEvent(
+                await getUserName(req.headers.authorization),
+                enclosure,
+                specie,
+                animals,
+                'Nourrissage',
+                ''
+            );
+            res.status(201).json({
+                message: 'Nourissage effectué pour : ' + specie.name,
+                newEvent
+            });
+        } else {
+            res.status(404).json({ message: 'Animal non sorti' });
+        }
     } catch (error) {
         if (error instanceof Error.DocumentNotFoundError) {
             Logging.error(NAMESPACE, error);
