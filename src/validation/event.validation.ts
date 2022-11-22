@@ -1,8 +1,6 @@
 import Joi from 'joi';
 
 const register = Joi.object({
-    createdBy: Joi.string().required(),
-
     enclosure: Joi.string().required(),
 
     specie: Joi.string().required(),

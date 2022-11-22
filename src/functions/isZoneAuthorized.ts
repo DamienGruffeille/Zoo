@@ -7,7 +7,7 @@ const NAMESPACE = 'Zone Auth';
 export const isZoneAuthorized = async (
     username: string,
     enclosure: string
-): Promise<boolean | Error> => {
+): Promise<boolean> => {
     Logging.info(NAMESPACE, 'Vérification de la zone');
     const employee = await Employee.findOne({ name: username })
         .select('zone')
@@ -17,7 +17,6 @@ export const isZoneAuthorized = async (
         .exec();
 
     if (employee && _enclosure) {
-        const _enclosureZone = _enclosure?.zone;
         if (
             employee.zone.toString() === 'toutes' ||
             employee.zone === _enclosure.zone
