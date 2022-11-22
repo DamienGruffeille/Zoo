@@ -3,9 +3,8 @@ import { Error } from 'mongoose';
 import { createEvent } from '../functions/createEvent';
 import Logging from '../library/logging';
 import Animal from '../model/animal.model';
-import Specie from '../interface/specie.interface';
-import ISpecie from '../interface/specie.interface';
 import { getUserName } from '../functions/getUserName';
+import { isZoneAuthorized } from '../functions/isZoneAuthorized';
 
 const NAMESPACE = 'Animal';
 
@@ -113,18 +112,18 @@ const takeAnimalOutside = async (
     next: NextFunction
 ) => {
     const animalId: string = req.body._id;
-
     const animalPosition = await Animal.findById(animalId)
         .select('position')
         .exec();
 
     Logging.info(NAMESPACE, 'Animal position = ' + animalPosition);
 
+    /** Vérification si l'animal n'est pas déjà dehors */
     if (animalPosition?.position === 'Dehors') {
         res.status(400).json({ message: "L'animal est déjà dehors" });
     } else {
         try {
-            /** Je cherche l'animal par son ID puis update sa position */
+            /** L'animal n'est pas dehors donc je le cherche par son ID puis update sa position */
             const animalUpdated = await Animal.findOneAndUpdate(
                 { _id: animalId },
                 { position: 'Dehors' }
@@ -135,21 +134,62 @@ const takeAnimalOutside = async (
 
             const specie: any = animalUpdated.specie;
 
+            /** Vérification de la présence du headers authorization pour récupérer le nom de l'employé(é) */
             if (req.headers.authorization) {
                 Logging.info(NAMESPACE, 'Le header a bien été envoyé');
 
-                const newEvent = await createEvent(
-                    await getUserName(req.headers.authorization),
-                    specie.enclosure,
-                    specie,
-                    animalId,
-                    'Sortie',
-                    ''
+                /** Appel de la fonction qui permet d'extraire le nom de l'employé pour créer l'évènement */
+                getUserName(
+                    req.headers.authorization,
+                    async (error, username) => {
+                        if (error) {
+                            Logging.error(
+                                NAMESPACE,
+                                'Impossible de récupérer le username ' + error
+                            );
+
+                            return res.status(401).json({
+                                message: 'Username non récupéré',
+                                error: error
+                            });
+                        } else if (username) {
+                            /**  On a bien le nom de l'employé(e), appel de la fonction de vérification des droits sur la zone de l'enclos */
+                            if (
+                                await isZoneAuthorized(
+                                    username,
+                                    specie.enclosure
+                                )
+                            ) {
+                                /** L'employé(e) est bien habilité(e) donc on créé l'évènement */
+                                const newEvent = await createEvent(
+                                    username,
+                                    specie.enclosure,
+                                    specie,
+                                    animalId,
+                                    'Sortie',
+                                    ''
+                                );
+                                Logging.info(
+                                    NAMESPACE,
+                                    animalUpdated.name +
+                                        ' est sorti par ' +
+                                        username
+                                );
+                                res.status(202).json({
+                                    message:
+                                        'Animal sorti : ' + animalUpdated.name,
+                                    newEvent
+                                });
+                            } else {
+                                /** L'employé(e) n'est pas habilité sur la zone */
+                                res.status(404).json({
+                                    message:
+                                        'Soigneur non habilité pour cette zone'
+                                });
+                            }
+                        }
+                    }
                 );
-                res.status(202).json({
-                    message: 'Animal sorti : ' + animalUpdated.name,
-                    newEvent
-                });
             } else {
                 res.status(404).json({ message: 'Animal non sorti' });
             }
@@ -175,11 +215,13 @@ const takeAnimalInside = async (
         .select('position')
         .exec();
 
+    /** Vérification si l'animal n'est pas déjà dedans */
     if (animalPosition?.position === 'Dedans') {
         res.status(400).json({ message: "L'animal est déjà à l'intérieur" });
     } else {
         try {
-            const updatedAnimal = await Animal.findOneAndUpdate(
+            /** L'animal n'est pas dedans donc je le cherche par son ID puis update sa position */
+            const animalUpdated = await Animal.findOneAndUpdate(
                 { _id: animalId },
                 { position: 'Dedans' }
             )
@@ -187,24 +229,59 @@ const takeAnimalInside = async (
                 .populate('specie')
                 .exec();
 
-            const specie: any = updatedAnimal.specie;
+            const specie: any = animalUpdated.specie;
 
+            /** Vérification de la présence du headers authorization pour récupérer le nom de l'employé(é) */
             if (req.headers.authorization) {
                 Logging.info(NAMESPACE, 'Le header a bien été envoyé');
 
-                const newEvent = await createEvent(
-                    await getUserName(req.headers.authorization),
-                    specie.enclosure,
-                    specie,
-                    animalId,
-                    'Entrée',
-                    ''
+                /** Appel de la fonction qui permet d'extraire le nom de l'employé pour créer l'évènement */
+                getUserName(
+                    req.headers.authorization,
+                    async (error, username) => {
+                        if (error) {
+                            Logging.error(
+                                NAMESPACE,
+                                'Impossible de récupérer le username ' + error
+                            );
+
+                            return res.status(401).json({
+                                message: 'Username non récupéré',
+                                error: error
+                            });
+                        } else if (username) {
+                            /**  On a bien le nom de l'employé(e), appel de la fonction de vérification des droits sur la zone de l'enclos */
+                            if (
+                                await isZoneAuthorized(
+                                    username,
+                                    specie.enclosure
+                                )
+                            ) {
+                                const newEvent = await createEvent(
+                                    username,
+                                    specie.enclosure,
+                                    specie,
+                                    animalId,
+                                    'Entrée',
+                                    ''
+                                );
+                                Logging.info(
+                                    NAMESPACE,
+                                    animalUpdated.name +
+                                        ' est rentré par ' +
+                                        username
+                                );
+                                res.status(202).json({
+                                    message:
+                                        'Animal rentré : ' + animalUpdated.name,
+                                    newEvent
+                                });
+                            }
+                        }
+                    }
                 );
-                res.status(202).json({
-                    message: 'Animal rentré : ' + updatedAnimal.name,
-                    newEvent
-                });
             } else {
+                Logging.error(NAMESPACE, "L'animal n'a pas pu être rentré");
                 res.status(404).json({ message: 'Animal non rentré' });
             }
         } catch (error) {

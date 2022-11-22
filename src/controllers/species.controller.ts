@@ -215,24 +215,24 @@ const feedSpecie = async (req: Request, res: Response, next: NextFunction) => {
         const enclosure: any = specie.enclosure;
         const animals = 'bibi';
 
-        if (req.headers.authorization) {
-            Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+        // if (req.headers.authorization) {
+        //     Logging.info(NAMESPACE, 'Le header a bien été envoyé');
 
-            const newEvent = await createEvent(
-                await getUserName(req.headers.authorization),
-                enclosure,
-                specie,
-                animals,
-                'Nourrissage',
-                ''
-            );
-            res.status(201).json({
-                message: 'Nourissage effectué pour : ' + specie.name,
-                newEvent
-            });
-        } else {
-            res.status(404).json({ message: 'Animal non sorti' });
-        }
+        //     const newEvent = await createEvent(
+        //         await getUserName(req.headers.authorization),
+        //         enclosure,
+        //         specie,
+        //         animals,
+        //         'Nourrissage',
+        //         ''
+        //     );
+        //     res.status(201).json({
+        //         message: 'Nourissage effectué pour : ' + specie.name,
+        //         newEvent
+        //     });
+        // } else {
+        //     res.status(404).json({ message: 'Animal non sorti' });
+        // }
     } catch (error) {
         if (error instanceof Error.DocumentNotFoundError) {
             Logging.error(NAMESPACE, error);
