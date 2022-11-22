@@ -43,4 +43,24 @@ const register = Joi.object({
         .required()
 });
 
-export default { register };
+const sortir = Joi.object({
+    _id: Joi.string().required(),
+
+    stillInsideAnimals: Joi.array().required()
+});
+
+const rentrer = Joi.object({
+    _id: Joi.string().required(),
+
+    stillOutsideAnimals: Joi.array().required()
+});
+
+const feed = Joi.object({
+    _id: Joi.string().required()
+});
+
+const stimulate = Joi.object({
+    _id: Joi.string().required()
+});
+
+export default { register, sortir, rentrer, feed, stimulate };

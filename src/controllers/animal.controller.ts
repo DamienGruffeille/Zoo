@@ -133,6 +133,7 @@ const takeAnimalOutside = async (
                 .exec();
 
             const specie: any = animalUpdated.specie;
+            let animalArray = [animalUpdated._id];
 
             /** Vérification de la présence du headers authorization pour récupérer le nom de l'employé(é) */
             if (req.headers.authorization) {
@@ -165,7 +166,7 @@ const takeAnimalOutside = async (
                                     username,
                                     specie.enclosure,
                                     specie,
-                                    animalId,
+                                    animalArray,
                                     'Sortie',
                                     ''
                                 );
@@ -230,6 +231,7 @@ const takeAnimalInside = async (
                 .exec();
 
             const specie: any = animalUpdated.specie;
+            let animalArray = [animalUpdated._id];
 
             /** Vérification de la présence du headers authorization pour récupérer le nom de l'employé(é) */
             if (req.headers.authorization) {
@@ -261,7 +263,7 @@ const takeAnimalInside = async (
                                     username,
                                     specie.enclosure,
                                     specie,
-                                    animalId,
+                                    animalArray,
                                     'Entrée',
                                     ''
                                 );

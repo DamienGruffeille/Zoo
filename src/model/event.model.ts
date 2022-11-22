@@ -8,7 +8,7 @@ const EventSchema = new Schema(
         createdBy: { type: 'string', ref: 'Employees', required: true },
         enclosure: { type: 'string', ref: 'Enclosure', required: true },
         specie: { type: 'string', ref: 'Specie', required: true },
-        animal: { type: 'string', ref: 'Animal', required: true },
+        animal: { type: Array, ref: 'Animal', required: true },
         eventType: {
             type: 'string',
             enum: [

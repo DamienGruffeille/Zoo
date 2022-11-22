@@ -5,6 +5,7 @@ import Animal from '../model/animal.model';
 import { Error } from 'mongoose';
 import { createEvent } from '../functions/createEvent';
 import { getUserName } from '../functions/getUserName';
+import { isZoneAuthorized } from '../functions/isZoneAuthorized';
 
 const NAMESPACE = 'SPECIES';
 
@@ -138,11 +139,81 @@ const takeSpecieOutside = async (
                 position: 'Dedans'
             }).exec();
 
-            res.status(202).json({
-                message: 'Liste des animaux sortis',
-                animauxSortis: outsideAnimals,
-                animauxNonSortis: insideAnimals
+            const specie = await Specie.findById(specieId)
+                .select('enclosure')
+                .orFail()
+                .exec();
+
+            let outsideAnimalArray: string[] = [];
+            let insideAnimalArray: string[] = [];
+
+            outsideAnimals.forEach((animal) => {
+                outsideAnimalArray.push(animal._id);
             });
+            insideAnimals.forEach((animal) => {
+                insideAnimalArray.push(animal._id);
+            });
+
+            if (req.headers.authorization) {
+                Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+
+                /** Appel de la fonction qui permet d'extraire le nom de l'employé pour créer l'évènement */
+                getUserName(
+                    req.headers.authorization,
+                    async (error, username) => {
+                        if (error) {
+                            Logging.error(
+                                NAMESPACE,
+                                'Impossible de récupérer le username ' + error
+                            );
+
+                            return res.status(401).json({
+                                message: 'Username non récupéré',
+                                error: error
+                            });
+                        } else if (username) {
+                            /**  On a bien le nom de l'employé(e), appel de la fonction de vérification des droits sur la zone de l'enclos */
+                            if (
+                                await isZoneAuthorized(
+                                    username,
+                                    specie.enclosure.toString()
+                                )
+                            ) {
+                                /** L'employé(e) est bien habilité(e) donc on créé l'évènement */
+                                const newEvent = await createEvent(
+                                    username,
+                                    specie.enclosure.toString(),
+                                    specie,
+                                    outsideAnimalArray,
+                                    'Sortie',
+                                    'Animaux non sortis : ' +
+                                        insideAnimalArray.toString()
+                                );
+                                Logging.info(
+                                    NAMESPACE,
+
+                                    ' Les animaux suivants sont sortis : ' +
+                                        outsideAnimalArray
+                                );
+                                res.status(202).json({
+                                    message:
+                                        'Animaux sortis : ' +
+                                        outsideAnimalArray,
+                                    newEvent
+                                });
+                            } else {
+                                /** L'employé(e) n'est pas habilité sur la zone */
+                                res.status(404).json({
+                                    message:
+                                        'Soigneur non habilité pour cette zone'
+                                });
+                            }
+                        }
+                    }
+                );
+            } else {
+                res.status(404).json({ message: 'Espèce non sortie' });
+            }
         } catch (error) {
             if (error instanceof Error.DocumentNotFoundError) {
                 Logging.error(NAMESPACE, error);
@@ -190,11 +261,81 @@ const takeSpecieInside = async (
                 position: 'Dedans'
             }).exec();
 
-            res.status(200).json({
-                message: 'Liste des animaux rentrés',
-                animauxRentrés: insideAnimals,
-                animauxNonRentrés: outsideAnimals
+            const specie = await Specie.findById(specieId)
+                .select('enclosure')
+                .orFail()
+                .exec();
+
+            let outsideAnimalArray: string[] = [];
+            let insideAnimalArray: string[] = [];
+
+            outsideAnimals.forEach((animal) => {
+                outsideAnimalArray.push(animal._id);
             });
+            insideAnimals.forEach((animal) => {
+                insideAnimalArray.push(animal._id);
+            });
+
+            if (req.headers.authorization) {
+                Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+
+                /** Appel de la fonction qui permet d'extraire le nom de l'employé pour créer l'évènement */
+                getUserName(
+                    req.headers.authorization,
+                    async (error, username) => {
+                        if (error) {
+                            Logging.error(
+                                NAMESPACE,
+                                'Impossible de récupérer le username ' + error
+                            );
+
+                            return res.status(401).json({
+                                message: 'Username non récupéré',
+                                error: error
+                            });
+                        } else if (username) {
+                            /**  On a bien le nom de l'employé(e), appel de la fonction de vérification des droits sur la zone de l'enclos */
+                            if (
+                                await isZoneAuthorized(
+                                    username,
+                                    specie.enclosure.toString()
+                                )
+                            ) {
+                                /** L'employé(e) est bien habilité(e) donc on créé l'évènement */
+                                const newEvent = await createEvent(
+                                    username,
+                                    specie.enclosure.toString(),
+                                    specie,
+                                    insideAnimalArray,
+                                    'Entrée',
+                                    'Animaux non rentrés : ' +
+                                        outsideAnimalArray.toString()
+                                );
+                                Logging.info(
+                                    NAMESPACE,
+
+                                    ' Les animaux suivants sont rentrés : ' +
+                                        insideAnimalArray
+                                );
+                                res.status(202).json({
+                                    message:
+                                        'Animaux rentrés : ' +
+                                        insideAnimalArray,
+                                    newEvent
+                                });
+                            } else {
+                                /** L'employé(e) n'est pas habilité sur la zone */
+                                res.status(404).json({
+                                    message:
+                                        'Soigneur non habilité pour cette zone'
+                                });
+                            }
+                        }
+                    }
+                );
+            } else {
+                res.status(404).json({ message: 'Espèce non sortie' });
+            }
         } catch (error) {
             if (error instanceof Error.DocumentNotFoundError) {
                 Logging.error(NAMESPACE, error);
@@ -213,26 +354,68 @@ const feedSpecie = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const specie = await Specie.findById(specieId).orFail().exec();
         const enclosure: any = specie.enclosure;
-        const animals = 'bibi';
+        const animals = await Animal.find({ specie: specie })
+            .select('_id')
+            .exec();
 
-        // if (req.headers.authorization) {
-        //     Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+        const animalArray: string[] = [];
 
-        //     const newEvent = await createEvent(
-        //         await getUserName(req.headers.authorization),
-        //         enclosure,
-        //         specie,
-        //         animals,
-        //         'Nourrissage',
-        //         ''
-        //     );
-        //     res.status(201).json({
-        //         message: 'Nourissage effectué pour : ' + specie.name,
-        //         newEvent
-        //     });
-        // } else {
-        //     res.status(404).json({ message: 'Animal non sorti' });
-        // }
+        animals.forEach((animal) => {
+            animalArray.push(animal._id);
+        });
+
+        if (req.headers.authorization) {
+            Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+
+            getUserName(req.headers.authorization, async (error, username) => {
+                if (error) {
+                    Logging.error(
+                        NAMESPACE,
+                        'Impossible de récupérer le username ' + error
+                    );
+
+                    return res.status(401).json({
+                        message: 'Username non récupéré',
+                        error: error
+                    });
+                } else if (username) {
+                    /**  On a bien le nom de l'employé(e), appel de la fonction de vérification des droits sur la zone de l'enclos */
+                    if (
+                        await isZoneAuthorized(
+                            username,
+                            specie.enclosure.toString()
+                        )
+                    ) {
+                        /** L'employé(e) est bien habilité(e) donc on créé l'évènement */
+                        const newEvent = await createEvent(
+                            username,
+                            enclosure,
+                            specie,
+                            animalArray,
+                            'Nourrissage',
+                            ''
+                        );
+                        Logging.info(
+                            NAMESPACE,
+
+                            ' Les animaux suivants ont été nourris : ' +
+                                animalArray
+                        );
+                        res.status(202).json({
+                            message: 'Animaux nourris : ' + animalArray,
+                            newEvent
+                        });
+                    } else {
+                        /** L'employé(e) n'est pas habilité sur la zone */
+                        res.status(404).json({
+                            message: 'Soigneur non habilité pour cette zone'
+                        });
+                    }
+                }
+            });
+        } else {
+            res.status(404).json({ message: 'Espèce non nourrie' });
+        }
     } catch (error) {
         if (error instanceof Error.DocumentNotFoundError) {
             Logging.error(NAMESPACE, error);
@@ -253,10 +436,69 @@ const stimulateSpecie = async (
 
     try {
         const specie = await Specie.findById(specieId).orFail().exec();
+        const enclosure: any = specie.enclosure;
+        const animals = await Animal.find({ specie: specie })
+            .select('_id')
+            .exec();
 
-        res.status(201).json({
-            message: 'Stimulation effectuée pour : ' + specie.name
+        const animalArray: string[] = [];
+
+        animals.forEach((animal) => {
+            animalArray.push(animal._id);
         });
+
+        if (req.headers.authorization) {
+            Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+
+            getUserName(req.headers.authorization, async (error, username) => {
+                if (error) {
+                    Logging.error(
+                        NAMESPACE,
+                        'Impossible de récupérer le username ' + error
+                    );
+
+                    return res.status(401).json({
+                        message: 'Username non récupéré',
+                        error: error
+                    });
+                } else if (username) {
+                    /**  On a bien le nom de l'employé(e), appel de la fonction de vérification des droits sur la zone de l'enclos */
+                    if (
+                        await isZoneAuthorized(
+                            username,
+                            specie.enclosure.toString()
+                        )
+                    ) {
+                        /** L'employé(e) est bien habilité(e) donc on créé l'évènement */
+                        const newEvent = await createEvent(
+                            username,
+                            enclosure,
+                            specie,
+                            animalArray,
+                            'Stimulation',
+                            ''
+                        );
+                        Logging.info(
+                            NAMESPACE,
+
+                            ' Les animaux suivants ont été stimulés : ' +
+                                animalArray
+                        );
+                        res.status(202).json({
+                            message: 'Animaux stimulés : ' + animalArray,
+                            newEvent
+                        });
+                    } else {
+                        /** L'employé(e) n'est pas habilité sur la zone */
+                        res.status(404).json({
+                            message: 'Soigneur non habilité pour cette zone'
+                        });
+                    }
+                }
+            });
+        } else {
+            res.status(404).json({ message: 'Espèce non stimulée' });
+        }
     } catch (error) {
         if (error instanceof Error.DocumentNotFoundError) {
             Logging.error(NAMESPACE, error);

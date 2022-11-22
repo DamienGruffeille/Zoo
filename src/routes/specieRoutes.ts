@@ -35,21 +35,25 @@ router.delete(
 router.put(
     '/sortir',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    validationMiddleware(validate.sortir),
     controller.takeSpecieOutside
 );
 router.put(
     '/rentrer',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    validationMiddleware(validate.rentrer),
     controller.takeSpecieInside
 );
 router.put(
     '/nourrir',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    validationMiddleware(validate.feed),
     controller.feedSpecie
 );
 router.put(
     '/stimuler',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    validationMiddleware(validate.stimulate),
     controller.stimulateSpecie
 );
 

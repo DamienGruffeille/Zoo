@@ -8,7 +8,7 @@ export const createEvent = async (
     createdBy: string,
     enclosure: string,
     specie: object,
-    animal: string,
+    animal: string[],
     eventType: string,
     observations: string
 ) => {

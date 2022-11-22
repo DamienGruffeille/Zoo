@@ -10,6 +10,7 @@ import vivariumRoutes from './routes/vivariumRoutes';
 import pondRoutes from './routes/pondRoutes';
 import specieRoutes from './routes/specieRoutes';
 import animalRoutes from './routes/animalRoutes';
+import eventRoutes from './routes/eventRoutes';
 
 const NAMESPACE = 'SERVER';
 const router = express();
@@ -82,6 +83,7 @@ const StartServer = () => {
     router.use('/api/bassins', pondRoutes);
     router.use('/api/especes', specieRoutes);
     router.use('/api/animaux', animalRoutes);
+    router.use('/api/evenements', eventRoutes);
 
     /** Healthcheck */
     router.get('/ping', (req, res, next) =>
