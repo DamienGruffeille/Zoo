@@ -102,6 +102,8 @@ const deleteEnclosure = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
+const checkEnclosure = (req: Request, res: Response, next: NextFunction) => {};
+
 export default {
     createEnclosure,
     getEnclosure,
