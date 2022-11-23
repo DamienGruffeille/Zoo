@@ -3,6 +3,8 @@ import { Error } from 'mongoose';
 import { createEvent } from '../functions/createEvent';
 import Logging from '../library/logging';
 import Animal from '../model/animal.model';
+import Specie from '../interface/specie.interface';
+import Enclosure from '../interface/enclosure.interface';
 import { getUserName } from '../functions/getUserName';
 import { isZoneAuthorized } from '../functions/isZoneAuthorized';
 
@@ -288,6 +290,63 @@ const takeAnimalInside = async (
     }
 };
 
+const healAnimal = async (req: Request, res: Response, next: NextFunction) => {
+    const { _id, observations } = req.body;
+    let createdBy;
+
+    const animal = await Animal.findById(_id).populate('specie').exec();
+
+    if (!animal) {
+        Logging.error(NAMESPACE, 'Animal not found');
+        return res.status(404).json({ message: 'Animal non trouvé' });
+    }
+
+    const specie = animal.specie as Specie;
+    const enclosure = specie.enclosure.toString();
+
+    if (!req.headers.authorization) {
+        Logging.error(NAMESPACE, 'Headers.Authorization absent');
+        return res
+            .status(500)
+            .json({ message: 'Headers.Authorization absent' });
+    }
+
+    await getUserName(req.headers.authorization, async (error, username) => {
+        if (error) {
+            Logging.error(
+                NAMESPACE,
+                'Impossible de récupérer le username ' + error
+            );
+
+            return res.status(401).json({
+                message: 'Username non récupéré',
+                error: error
+            });
+        } else if (username) {
+            createdBy = username;
+            Logging.info(NAMESPACE, 'Employé : ' + createdBy);
+        }
+    });
+
+    if (!createdBy) {
+        Logging.error(NAMESPACE, 'Employé non trouvé');
+        return res.status(404).json({ message: 'Employé non trouvé' });
+    }
+
+    const event = await createEvent(
+        createdBy,
+        enclosure,
+        specie,
+        [_id],
+        'Soins',
+        observations
+    );
+
+    Logging.info(NAMESPACE, 'Evènement soin créé' + event);
+
+    return res.status(200).json({ message: 'Evènement créé', event });
+};
+
 export default {
     createAnimal,
     getAnimal,
@@ -295,5 +354,6 @@ export default {
     updateAnimal,
     deleteAnimal,
     takeAnimalOutside,
-    takeAnimalInside
+    takeAnimalInside,
+    healAnimal
 };

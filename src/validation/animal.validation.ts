@@ -59,4 +59,10 @@ const movement = Joi.object({
     _id: Joi.string().required()
 });
 
-export default { register, movement };
+const heal = Joi.object({
+    _id: Joi.string().required(),
+
+    observations: Joi.array().required()
+});
+
+export default { register, movement, heal };
