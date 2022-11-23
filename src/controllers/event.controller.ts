@@ -55,10 +55,20 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     if (createdBy) {
         /** Vérification que l'employé(e) a les droits sur la zone */
         const zoneAuthorized = await isZoneAuthorized(createdBy, enclosure);
+        if (!zoneAuthorized) {
+            Logging.error(NAMESPACE, 'Zone non autorisée pour cet employé');
+            return res
+                .status(404)
+                .json({ message: 'Zone non autorisée pour cet employé' });
+        }
 
         const employee = await EmployeeModel.findOne({ name: createdBy })
             .select('role')
             .exec();
+        if (!employee) {
+            Logging.error(NAMESPACE, 'Employé non trouvé');
+            return res.status(404).json({ message: 'Employé non trouvé' });
+        }
 
         Logging.info(
             NAMESPACE,
@@ -67,16 +77,6 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
                 ' / employee : ' +
                 employee?.role
         );
-
-        if (!zoneAuthorized) {
-            return res
-                .status(404)
-                .json({ message: 'Zone non autorisée pour cet employé' });
-        }
-
-        if (!employee) {
-            return res.status(404).json({ message: 'Employé non trouvé' });
-        }
 
         /** Si l'employé existe et est autorisé sur la zone, vérification si son rôle lui permet de publier le type d'évenement */
         let authorizedToPublish = false;

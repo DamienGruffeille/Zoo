@@ -12,6 +12,14 @@ router.post(
     validationMiddleware(validate.register),
     controller.createEnclosure
 );
+
+router.post(
+    '/verifier',
+    extractJWT('Responsable', 'Vétérinaire'),
+    validationMiddleware(validate.check),
+    controller.checkEnclosure
+);
+
 router.get(
     '/get/:enclosureId',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
