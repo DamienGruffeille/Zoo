@@ -120,88 +120,78 @@ const takeAnimalOutside = async (
 
     /** Vérification si l'animal n'est pas déjà dehors */
     if (animalPosition?.position === 'Dehors') {
-        res.status(400).json({ message: "L'animal est déjà dehors" });
-    } else {
-        try {
-            /** L'animal n'est pas dehors donc je le cherche par son ID puis update sa position */
-            const animalUpdated = await Animal.findOneAndUpdate(
-                { _id: animalId },
-                { position: 'Dehors' }
-            )
-                .orFail()
-                .populate('specie')
-                .exec();
+        return res.status(400).json({ message: "L'animal est déjà dehors" });
+    }
 
-            const specie: any = animalUpdated.specie;
-            let animalArray = [animalUpdated._id];
+    if (!req.headers.authorization) {
+        return res
+            .status(500)
+            .json({ message: 'Headers.authorization manquant' });
+    }
+    Logging.info(NAMESPACE, 'Le header a bien été envoyé');
 
-            /** Vérification de la présence du headers authorization pour récupérer le nom de l'employé(é) */
-            if (req.headers.authorization) {
-                Logging.info(NAMESPACE, 'Le header a bien été envoyé');
+    try {
+        /** L'animal n'est pas dehors donc je le cherche par son ID puis update sa position */
+        const animalUpdated = await Animal.findOneAndUpdate(
+            { _id: animalId },
+            { position: 'Dehors' }
+        )
+            .orFail()
+            .populate('specie')
+            .exec();
 
-                /** Appel de la fonction qui permet d'extraire le nom de l'employé pour créer l'évènement */
-                getUserName(
-                    req.headers.authorization,
-                    async (error, username) => {
-                        if (error) {
-                            Logging.error(
-                                NAMESPACE,
-                                'Impossible de récupérer le username ' + error
-                            );
+        const specie: any = animalUpdated.specie;
+        let animalArray = [animalUpdated._id];
 
-                            return res.status(401).json({
-                                message: 'Username non récupéré',
-                                error: error
-                            });
-                        } else if (username) {
-                            /**  On a bien le nom de l'employé(e), appel de la fonction de vérification des droits sur la zone de l'enclos */
-                            if (
-                                await isZoneAuthorized(
-                                    username,
-                                    specie.enclosure
-                                )
-                            ) {
-                                /** L'employé(e) est bien habilité(e) donc on créé l'évènement */
-                                const newEvent = await createEvent(
-                                    username,
-                                    specie.enclosure,
-                                    specie,
-                                    animalArray,
-                                    'Sortie',
-                                    ''
-                                );
-                                Logging.info(
-                                    NAMESPACE,
-                                    animalUpdated.name +
-                                        ' est sorti par ' +
-                                        username
-                                );
-                                res.status(202).json({
-                                    message:
-                                        'Animal sorti : ' + animalUpdated.name,
-                                    newEvent
-                                });
-                            } else {
-                                /** L'employé(e) n'est pas habilité sur la zone */
-                                res.status(404).json({
-                                    message:
-                                        'Soigneur non habilité pour cette zone'
-                                });
-                            }
-                        }
-                    }
+        /** Vérification de la présence du headers authorization pour récupérer le nom de l'employé(é) */
+
+        /** Appel de la fonction qui permet d'extraire le nom de l'employé pour créer l'évènement */
+        getUserName(req.headers.authorization, async (error, username) => {
+            if (error) {
+                Logging.error(
+                    NAMESPACE,
+                    'Impossible de récupérer le username ' + error
                 );
-            } else {
-                res.status(404).json({ message: 'Animal non sorti' });
+
+                return res.status(401).json({
+                    message: 'Username non récupéré',
+                    error: error
+                });
+            } else if (username) {
+                /**  On a bien le nom de l'employé(e), appel de la fonction de vérification des droits sur la zone de l'enclos */
+                if (await isZoneAuthorized(username, specie.enclosure)) {
+                    /** L'employé(e) est bien habilité(e) donc on créé l'évènement */
+                    const newEvent = await createEvent(
+                        username,
+                        specie.enclosure,
+                        specie,
+                        animalArray,
+                        'Sortie',
+                        ''
+                    );
+                    Logging.info(
+                        NAMESPACE,
+                        animalUpdated.name + ' est sorti par ' + username
+                    );
+                    return res.status(202).json({
+                        message: 'Animal sorti : ' + animalUpdated.name,
+                        newEvent
+                    });
+                } else {
+                    /** L'employé(e) n'est pas habilité sur la zone */
+                    return res.status(404).json({
+                        message: 'Soigneur non habilité pour cette zone'
+                    });
+                }
             }
-        } catch (error) {
-            if (error instanceof Error.DocumentNotFoundError) {
-                Logging.error(NAMESPACE, error);
-                res.status(404).json({ error });
-            } else {
-                Logging.error(NAMESPACE, error);
-                res.status(500).json({ error });
-            }
+        });
+    } catch (error) {
+        if (error instanceof Error.DocumentNotFoundError) {
+            Logging.error(NAMESPACE, error);
+            res.status(404).json({ error });
+        } else {
+            Logging.error(NAMESPACE, error);
+            res.status(500).json({ error });
         }
     }
 };

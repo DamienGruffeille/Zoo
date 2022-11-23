@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { getUserName } from '../functions/getUserName';
 import { isZoneAuthorized } from '../functions/isZoneAuthorized';
+import { areJSONDataOK } from '../functions/checkJSONData';
 import Logging from '../library/logging';
 import EmployeeModel from '../model/Employee.model';
 import Action from '../model/action.model';
@@ -12,8 +13,17 @@ const createAction = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { enclosure, specie, animal, plannedDate, observations } = req.body;
+    const { enclosure, specie, animal, plannedDate, observation } = req.body;
     let createdBy;
+
+    const JSONOk = await areJSONDataOK(enclosure, specie, animal);
+
+    if (!JSONOk) {
+        Logging.error(NAMESPACE, 'Le JSON est NOK');
+        return res
+            .status(400)
+            .json({ message: 'Les données saisies sont incorrectes' });
+    }
 
     if (req.headers.authorization) {
         await getUserName(
@@ -74,7 +84,7 @@ const createAction = async (
             specie,
             animal,
             plannedDate,
-            observations
+            observation
         });
 
         return action

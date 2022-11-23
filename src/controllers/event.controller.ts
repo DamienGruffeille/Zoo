@@ -8,6 +8,7 @@ import Enclos from '../model/enclosure.model';
 import Specie from '../model/specie.model';
 import Animal from '../model/animal.model';
 import Zone from '../model/zone.model';
+import { areJSONDataOK } from '../functions/checkJSONData';
 
 const NAMESPACE = 'EVENT';
 
@@ -15,33 +16,41 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     const { enclosure, specie, animal, eventType, observations } = req.body;
     let createdBy;
 
-    /** Récupération du username dans le headers.authorization */
-    if (req.headers.authorization) {
-        await getUserName(
-            req.headers.authorization,
-            async (error, username) => {
-                if (error) {
-                    Logging.error(
-                        NAMESPACE,
-                        'Impossible de récupérer le username ' + error
-                    );
+    const JSONOk = await areJSONDataOK(enclosure, specie, animal);
 
-                    return res.status(401).json({
-                        message: 'Username non récupéré',
-                        error: error
-                    });
-                } else if (username) {
-                    createdBy = username;
-                    Logging.info(NAMESPACE, 'Employé : ' + createdBy);
-                }
-            }
-        );
+    if (!JSONOk) {
+        Logging.error(NAMESPACE, 'Le JSON est NOK');
+        return res
+            .status(400)
+            .json({ message: 'Les données saisies sont incorrectes' });
     } else {
+        Logging.info(NAMESPACE, 'Le JSON est OK');
+    }
+
+    /** Récupération du username dans le headers.authorization */
+    if (!req.headers.authorization) {
         Logging.error(NAMESPACE, 'Headers.Authorization absent');
         return res
             .status(500)
             .json({ message: 'Headers.Authorization absent' });
     }
+
+    await getUserName(req.headers.authorization, async (error, username) => {
+        if (error) {
+            Logging.error(
+                NAMESPACE,
+                'Impossible de récupérer le username ' + error
+            );
+
+            return res.status(401).json({
+                message: 'Username non récupéré',
+                error: error
+            });
+        } else if (username) {
+            createdBy = username;
+            Logging.info(NAMESPACE, 'Employé : ' + createdBy);
+        }
+    });
 
     if (createdBy) {
         /** Vérification que l'employé(e) a les droits sur la zone */

@@ -7,5 +7,5 @@ export default interface IAction extends Document {
     animal: object;
     plannedDate: Date;
     status: string;
-    observations: string[];
+    observation: string;
 }

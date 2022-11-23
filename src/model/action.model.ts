@@ -12,11 +12,11 @@ const ActionSchema = new Schema(
         plannedDate: { type: Date, min: Date.now(), required: true },
         status: {
             type: String,
-            enum: ['En cours', 'Terminé'],
-            default: 'En cours',
+            enum: ['Planifiée', 'Terminée'],
+            default: 'Planifiée',
             required: true
         },
-        observations: { type: Array }
+        observation: { type: String, required: true }
     },
     baseOptions
 );

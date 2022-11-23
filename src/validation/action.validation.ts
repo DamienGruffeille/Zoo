@@ -75,7 +75,7 @@ const register = Joi.object({
 
     plannedDate: Joi.string().required(),
 
-    observations: Joi.array().allow('').required()
+    observation: Joi.string().required()
 });
 
 export default { register };
