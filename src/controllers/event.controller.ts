@@ -1,3 +1,4 @@
+import { info } from 'console';
 import { Request, Response, NextFunction } from 'express';
 import { getUserName } from '../functions/getUserName';
 import { isZoneAuthorized } from '../functions/isZoneAuthorized';
@@ -32,99 +33,100 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
                 }
             }
         );
+    } else {
+        Logging.error(NAMESPACE, 'Headers.Authorization absent');
+        return res
+            .status(500)
+            .json({ message: 'Headers.Authorization absent' });
+    }
 
-        if (createdBy) {
-            /** Vérification que l'employé(e) a les droits sur la zone */
-            const zoneAuthorized = await isZoneAuthorized(createdBy, enclosure);
+    if (createdBy) {
+        /** Vérification que l'employé(e) a les droits sur la zone */
+        const zoneAuthorized = await isZoneAuthorized(createdBy, enclosure);
 
-            const employee = await EmployeeModel.findOne({ name: createdBy })
-                .select('role')
-                .exec();
+        const employee = await EmployeeModel.findOne({ name: createdBy })
+            .select('role')
+            .exec();
 
-            Logging.info(
-                NAMESPACE,
-                'Zone autorisée : ' +
-                    zoneAuthorized +
-                    ' / employee : ' +
-                    employee?.role
-            );
+        Logging.info(
+            NAMESPACE,
+            'Zone autorisée : ' +
+                zoneAuthorized +
+                ' / employee : ' +
+                employee?.role
+        );
 
-            let authorizedToPublish = false;
-            if (zoneAuthorized && employee) {
-                switch (employee.role) {
-                    case 'Vétérinaire': {
-                        authorizedToPublish = true;
-                        break;
-                    }
-                    case 'Responsable': {
-                        switch (eventType) {
-                            case 'Bagarre': {
-                                authorizedToPublish = true;
-                                break;
-                            }
-                            case 'Accident': {
-                                authorizedToPublish = true;
-                                break;
-                            }
-                            case 'Vérification': {
-                                authorizedToPublish = true;
-                                break;
-                            }
-                        }
-                    }
-                    case 'Soigneur': {
-                        switch (eventType) {
-                            case 'Bagarre': {
-                                authorizedToPublish = true;
-                                break;
-                            }
-                            case 'Accident': {
-                                authorizedToPublish = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                Logging.info(NAMESPACE, 'Authorized ? ' + authorizedToPublish);
+        if (!zoneAuthorized) {
+            return res
+                .status(404)
+                .json({ message: 'Zone non autorisée pour cet employé' });
+        }
 
-                /** L'employé est autorisé à déclarer cet évènement */
-                if (authorizedToPublish) {
-                    const event = new Event({
-                        createdBy,
-                        enclosure,
-                        specie,
-                        animal,
-                        eventType,
-                        observations
-                    });
+        if (!employee) {
+            return res.status(404).json({ message: 'Employé non trouvé' });
+        }
 
-                    return event
-                        .save()
-                        .then((event) =>
-                            res
-                                .status(201)
-                                .json({ message: 'Evènement créé : ' + event })
-                        )
-                        .catch((error) => {
-                            res.status(500).json({
-                                message: 'Evènement non créé',
-                                error
-                            });
-                            Logging.error(NAMESPACE, error);
-                        });
-                }
-            } else {
-                Logging.error(
-                    NAMESPACE,
-                    'Utilisation non habilité. Zone autorisée ?  ' +
-                        zoneAuthorized +
-                        ' / Role employé : ' +
-                        employee?.role
-                );
-                res.status(400).json({
-                    message: 'Utilisateur non habilité à créer cet évènement'
-                });
+        /** Si l'employé existe et est autorisé sur la zone, vérification si son rôle lui permet de publier le type d'évenement */
+        let authorizedToPublish = false;
+
+        switch (employee.role) {
+            case 'Vétérinaire': {
+                authorizedToPublish = true;
+                break;
             }
+            case 'Responsable': {
+                if (
+                    eventType === 'Bagarre' ||
+                    eventType === 'Accident' ||
+                    eventType === 'Vérification'
+                ) {
+                    authorizedToPublish = true;
+                }
+                break;
+            }
+            case 'Soigneur': {
+                if (eventType === 'Bagarre' || eventType === 'Accident') {
+                    authorizedToPublish = true;
+                }
+                break;
+            }
+        }
+
+        Logging.info(NAMESPACE, 'Authorized ? ' + authorizedToPublish);
+
+        /** L'employé est autorisé à déclarer cet évènement */
+        if (authorizedToPublish) {
+            const event = new Event({
+                createdBy,
+                enclosure,
+                specie,
+                animal,
+                eventType,
+                observations
+            });
+
+            return event
+                .save()
+                .then((event) =>
+                    res
+                        .status(201)
+                        .json({ message: 'Evènement créé : ', event })
+                )
+                .catch((error) => {
+                    res.status(500).json({
+                        message: 'Evènement non créé',
+                        error
+                    });
+                    Logging.error(NAMESPACE, error);
+                });
+        } else {
+            Logging.error(
+                NAMESPACE,
+                'Employé non autorisé à signaler cet évènement'
+            );
+            return res.status(400).json({
+                message: 'Employé non autorisé à signaler cet évènement'
+            });
         }
     }
 };
