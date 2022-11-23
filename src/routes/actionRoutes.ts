@@ -13,4 +13,28 @@ router.post(
     controller.createAction
 );
 
+router.get(
+    '/zones/:id',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getActionsByZone
+);
+
+router.get(
+    '/enclos/:id',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getActionsByEnclosure
+);
+
+router.get(
+    '/especes/:id',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getActionsBySpecie
+);
+
+router.get(
+    '/animaux/:id',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getActionsByAnimal
+);
+
 export = router;

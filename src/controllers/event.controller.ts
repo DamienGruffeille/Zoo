@@ -246,7 +246,7 @@ const getEventsByEnclosure = async (
     } catch (error) {
         return res.status(404).json({
             message:
-                'Impossible de récupérer les évènements de la zone :  ' +
+                "Impossible de récupérer les évènements de l'enclos :  " +
                 enclosureId,
             error
         });
