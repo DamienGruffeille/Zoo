@@ -73,22 +73,7 @@ const register = Joi.object({
 
     animal: Joi.string().required(),
 
-    eventType: Joi.string()
-        .valid(
-            'Entrée',
-            'Sortie',
-            'Nourrissage',
-            'Soins',
-            'Stimulation',
-            'Naissance',
-            'Décès',
-            'Départ',
-            'Arrivée',
-            'Bagarre',
-            'Accident',
-            'Vérification'
-        )
-        .required(),
+    plannedDate: Joi.string().required(),
 
     observations: Joi.array().allow('').required()
 });

@@ -11,6 +11,7 @@ import pondRoutes from './routes/pondRoutes';
 import specieRoutes from './routes/specieRoutes';
 import animalRoutes from './routes/animalRoutes';
 import eventRoutes from './routes/eventRoutes';
+import actionRoutes from './routes/actionRoutes';
 
 const NAMESPACE = 'SERVER';
 const router = express();
@@ -84,6 +85,7 @@ const StartServer = () => {
     router.use('/api/especes', specieRoutes);
     router.use('/api/animaux', animalRoutes);
     router.use('/api/evenements', eventRoutes);
+    router.use('/api/actions', actionRoutes);
 
     /** Healthcheck */
     router.get('/ping', (req, res, next) =>
