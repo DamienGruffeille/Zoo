@@ -15,6 +15,7 @@ export const MongoConnect = () => {
         })
         .then(() => {
             Logging.info(NAMESPACE, 'Connected to MongoDB');
+            Logging.info(NAMESPACE, 'Launching server');
             StartServer();
         })
         .catch((error) => {
