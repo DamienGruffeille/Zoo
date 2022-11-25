@@ -14,7 +14,7 @@ const app = express();
 const NAMESPACE = 'APP';
 
 /** Only start the server if Mongo connects */
-export const StartServer = () => {
+const createApp = () => {
     app.use((req, res, next) => {
         /** Log the request */
         Logging.info(
@@ -80,6 +80,8 @@ export const StartServer = () => {
 
         return res.status(404).json({ message: error.message });
     });
+    Logging.info(NAMESPACE, 'App Created');
+    return app;
 };
 
-export default app;
+export default { createApp };

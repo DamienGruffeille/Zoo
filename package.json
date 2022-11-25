@@ -3,13 +3,14 @@
     "version": "1.0.0",
     "description": "gestion du zoo",
     "main": "src/index.ts",
+    "author": "Damien Gruffeille",
+    "license": "ISC",
     "scripts": {
         "dev": "nodemon --watch *.ts",
         "build": "rm -rf build/ && tsc",
-        "start": "node build/index.js"
+        "start": "node build/index.js",
+        "test": "jest"
     },
-    "author": "Damien Gruffeille",
-    "license": "ISC",
     "dependencies": {
         "bcrypt": "^5.1.0",
         "chalk": "^4.1.2",
