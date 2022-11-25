@@ -2,11 +2,11 @@
     "name": "zoo",
     "version": "1.0.0",
     "description": "gestion du zoo",
-    "main": "src/server.ts",
+    "main": "src/index.ts",
     "scripts": {
         "dev": "nodemon --watch *.ts",
         "build": "rm -rf build/ && tsc",
-        "start": "node build/server.js"
+        "start": "node build/index.js"
     },
     "author": "Damien Gruffeille",
     "license": "ISC",
