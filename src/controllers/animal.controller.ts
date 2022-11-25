@@ -4,7 +4,6 @@ import { createEvent } from '../functions/createEvent';
 import Logging from '../library/logging';
 import Animal from '../model/animal.model';
 import Specie from '../interface/specie.interface';
-import Enclosure from '../interface/enclosure.interface';
 import { getUserName } from '../functions/getUserName';
 import { isZoneAuthorized } from '../functions/isZoneAuthorized';
 

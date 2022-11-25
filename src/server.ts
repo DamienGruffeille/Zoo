@@ -14,7 +14,7 @@ import eventRoutes from './routes/eventRoutes';
 import actionRoutes from './routes/actionRoutes';
 
 const NAMESPACE = 'SERVER';
-const router = express();
+const app = express();
 
 /** Connect to Mongo */
 mongoose
@@ -34,7 +34,7 @@ mongoose
 
 /** Only start the server if Mongo connects */
 const StartServer = () => {
-    router.use((req, res, next) => {
+    app.use((req, res, next) => {
         /** Log the request */
         Logging.info(
             NAMESPACE,
@@ -53,12 +53,12 @@ const StartServer = () => {
         next();
     });
 
-    router.use(express.urlencoded({ extended: true }));
+    app.use(express.urlencoded({ extended: true }));
     /** Express includes BodyParser */
-    router.use(express.json());
+    app.use(express.json());
 
     /** Rules of the API */
-    router.use((req, res, next) => {
+    app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header(
             'Access-Control-Allow-Headers',
@@ -77,30 +77,30 @@ const StartServer = () => {
     });
 
     /** Routes */
-    router.use('/api/employes', employeeRoutes);
-    router.use('/api/zone', zoneRoutes);
-    router.use('/api/enclos', enclosureRoutes);
-    router.use('/api/vivariums', vivariumRoutes);
-    router.use('/api/bassins', pondRoutes);
-    router.use('/api/especes', specieRoutes);
-    router.use('/api/animaux', animalRoutes);
-    router.use('/api/evenements', eventRoutes);
-    router.use('/api/actions', actionRoutes);
+    app.use('/api/employes', employeeRoutes);
+    app.use('/api/zone', zoneRoutes);
+    app.use('/api/enclos', enclosureRoutes);
+    app.use('/api/vivariums', vivariumRoutes);
+    app.use('/api/bassins', pondRoutes);
+    app.use('/api/especes', specieRoutes);
+    app.use('/api/animaux', animalRoutes);
+    app.use('/api/evenements', eventRoutes);
+    app.use('/api/actions', actionRoutes);
 
     /** Healthcheck */
-    router.get('/ping', (req, res, next) =>
+    app.get('/ping', (req, res, next) =>
         res.status(200).json({ message: 'pong' })
     );
 
     /** Error handling */
-    router.use((req, res, next) => {
+    app.use((req, res, next) => {
         const error = new Error('not found');
         Logging.error(NAMESPACE, error);
 
         return res.status(404).json({ message: error.message });
     });
 
-    http.createServer(router).listen(config.server.port, () =>
+    http.createServer(app).listen(config.server.port, () =>
         Logging.info(
             NAMESPACE,
             `Server is running on port ${config.server.port}.`
