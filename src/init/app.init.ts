@@ -1,39 +1,20 @@
 import express from 'express';
-import http from 'http';
-import mongoose from 'mongoose';
-import { config } from './config/config';
-import Logging from './library/logging';
-import employeeRoutes from './routes/employeeRoutes';
-import zoneRoutes from './routes/zoneRoutes';
-import enclosureRoutes from './routes/enclosureRoutes';
-import vivariumRoutes from './routes/vivariumRoutes';
-import pondRoutes from './routes/pondRoutes';
-import specieRoutes from './routes/specieRoutes';
-import animalRoutes from './routes/animalRoutes';
-import eventRoutes from './routes/eventRoutes';
-import actionRoutes from './routes/actionRoutes';
+import Logging from '../library/logging';
+import employeeRoutes from '../routes/employeeRoutes';
+import zoneRoutes from '../routes/zoneRoutes';
+import enclosureRoutes from '../routes/enclosureRoutes';
+import vivariumRoutes from '../routes/vivariumRoutes';
+import pondRoutes from '../routes/pondRoutes';
+import specieRoutes from '../routes/specieRoutes';
+import animalRoutes from '../routes/animalRoutes';
+import eventRoutes from '../routes/eventRoutes';
+import actionRoutes from '../routes/actionRoutes';
 
-const NAMESPACE = 'SERVER';
 const app = express();
-
-/** Connect to Mongo */
-mongoose
-    .connect(config.mongo.url, {
-        retryWrites: true,
-        w: 'majority',
-        dbName: 'zoo'
-    })
-    .then(() => {
-        Logging.info(NAMESPACE, 'Connected to MongoDB');
-        StartServer();
-    })
-    .catch((error) => {
-        Logging.error(NAMESPACE, 'Unable to connect to MongoDB : ');
-        Logging.error(NAMESPACE, error);
-    });
+const NAMESPACE = 'APP';
 
 /** Only start the server if Mongo connects */
-const StartServer = () => {
+export const StartServer = () => {
     app.use((req, res, next) => {
         /** Log the request */
         Logging.info(
@@ -99,11 +80,6 @@ const StartServer = () => {
 
         return res.status(404).json({ message: error.message });
     });
-
-    http.createServer(app).listen(config.server.port, () =>
-        Logging.info(
-            NAMESPACE,
-            `Server is running on port ${config.server.port}.`
-        )
-    );
 };
+
+export default app;
