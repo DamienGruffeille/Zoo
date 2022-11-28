@@ -12,18 +12,16 @@ let server: http.Server<
 
 const ServerInit = (app: Express) => {
     server = http.createServer(app);
-
-    server.listen(config.server.port, () =>
-        Logging.info(
-            NAMESPACE,
-            `Server is running on port ${config.server.port}.`
-        )
-    );
+    /** possible de remplace ce if par un --runInBand dans script test */
+    if (process.env.NODE_ENV !== 'test') {
+        server.listen(config.server.port, () =>
+            Logging.info(
+                NAMESPACE,
+                `Server is running on port ${config.server.port}.`
+            )
+        );
+    }
 };
 
-const CloseServer = () => {
-    Logging.warn(NAMESPACE, server);
-    server.close();
-};
-
+const CloseServer = async () => server.close();
 export default { ServerInit, CloseServer };
