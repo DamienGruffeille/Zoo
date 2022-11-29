@@ -14,12 +14,12 @@ const ServerInit = (app: Express) => {
     server = http.createServer(app);
     /** possible de remplace ce if par un --runInBand dans script test */
     if (process.env.NODE_ENV !== 'test') {
-        server.listen(config.server.port, () =>
+        server.listen(config.server.port, () => {
             Logging.info(
                 NAMESPACE,
                 `Server is running on port ${config.server.port}.`
-            )
-        );
+            );
+        });
     }
 };
 

@@ -1,5 +1,6 @@
 import express from 'express';
 import Logging from '../library/logging';
+import testRoutes from '../routes/testRoutes';
 import employeeRoutes from '../routes/employeeRoutes';
 import zoneRoutes from '../routes/zoneRoutes';
 import enclosureRoutes from '../routes/enclosureRoutes';
@@ -9,6 +10,7 @@ import specieRoutes from '../routes/specieRoutes';
 import animalRoutes from '../routes/animalRoutes';
 import eventRoutes from '../routes/eventRoutes';
 import actionRoutes from '../routes/actionRoutes';
+import swaggerDocs from '../library/swagger';
 
 const app = express();
 const NAMESPACE = 'APP';
@@ -58,6 +60,7 @@ const createApp = () => {
     });
 
     /** Routes */
+    app.use('/api/test', testRoutes);
     app.use('/api/employes', employeeRoutes);
     app.use('/api/zone', zoneRoutes);
     app.use('/api/enclos', enclosureRoutes);
@@ -67,11 +70,7 @@ const createApp = () => {
     app.use('/api/animaux', animalRoutes);
     app.use('/api/evenements', eventRoutes);
     app.use('/api/actions', actionRoutes);
-
-    /** Healthcheck */
-    app.get('/ping', (req, res, next) =>
-        res.status(200).json({ message: 'pong' })
-    );
+    swaggerDocs(app, 3000);
 
     /** Error handling */
     app.use((req, res, next) => {
@@ -81,6 +80,7 @@ const createApp = () => {
         return res.status(404).json({ message: error.message });
     });
     Logging.info(NAMESPACE, 'App Created');
+
     return app;
 };
 

@@ -3,6 +3,39 @@ import Specie from '../interface/specie.interface';
 
 const baseOptions = { versionKey: false, timestamps: true };
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     SpecieSchema:
+ *       type: object
+ *       required:
+ *         - _id
+ *         - name
+ *         - sociable
+ *         - observations
+ *         - dangerous
+ *         - enclosure
+ *       properties:
+ *         _id:
+ *           type: string
+ *           default: kangourou
+ *         name:
+ *           type: string
+ *           default: Kangourou
+ *         sociable:
+ *           type: boolean
+ *           default: false
+ *         observations:
+ *           type: array
+ *           default: []
+ *         dangerous:
+ *           type: boolean
+ *           default: true
+ *         enclosure:
+ *           type: object
+ *           default: desert-australie
+ */
 const SpecieSchema: Schema = new Schema(
     {
         _id: { type: String },
@@ -46,5 +79,19 @@ const SpecieSchema: Schema = new Schema(
     },
     baseOptions
 );
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     feedSpecieSchema:
+ *       type: object
+ *       required:
+ *         - _id
+ *       properties:
+ *         _id:
+ *           type: string
+ *           default: kangourou
+ */
 
 export default model<Specie>('Species', SpecieSchema);

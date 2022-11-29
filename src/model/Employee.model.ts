@@ -2,6 +2,38 @@ import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import Employee from '../interface/employee.interface';
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     EmployeeSchema:
+ *       type: object
+ *       required:
+ *         - name
+ *         - firstName
+ *         - password
+ *         - role
+ *         - zone
+ *       properties:
+ *         name:
+ *           type: string
+ *           default: Marley
+ *         firstName:
+ *           type: string
+ *           default: Bob
+ *         email:
+ *           type: string
+ *           default: bobmarley@zoo.fr
+ *         password:
+ *           type: string
+ *           default: pass123
+ *         role:
+ *           type: string
+ *           default: Soigneur
+ *         zone:
+ *           type: string
+ *           default: australie
+ */
 const EmployeeSchema: Schema = new Schema(
     {
         name: { type: String, required: true },
@@ -52,6 +84,24 @@ EmployeeSchema.pre<Employee>('save', async function (next) {
 
     next();
 });
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     EmployeeLoginSchema:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           default: bobmarley@zoo.fr
+ *         password:
+ *           type: string
+ *           default: pass123
+ */
 
 // Verify if password is correct
 EmployeeSchema.methods.isValidPassword = async function (

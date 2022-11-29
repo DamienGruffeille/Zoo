@@ -44,6 +44,34 @@ router.put(
     validationMiddleware(validate.rentrer),
     controller.takeSpecieInside
 );
+/**
+ * @openapi
+ * '/api/especes/nourrir':
+ *  put:
+ *     tags:
+ *     - Especes
+ *     summary: feed a specy
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *              $ref: '#/components/schemas/feedSpecieSchema'
+ *     responses:
+ *      202:
+ *        description: Animals fed
+ *        content:
+ *          application/json:
+ *              $ref: '#/components/schemas/SpecieSchema'
+ *      401:
+ *        description: Unable to find Username
+ *      404:
+ *        description: Employee not authorized in the zone's enclosure
+ *      500:
+ *        description: Error occurred
+ */
 router.put(
     '/nourrir',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
