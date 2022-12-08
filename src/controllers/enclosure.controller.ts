@@ -61,6 +61,40 @@ const getAllEnclosure = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
+const getEnclosuresByZone = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const zoneId = req.params.zoneId;
+
+    if (zoneId === 'toutes') {
+        return Enclosure.find()
+            .then((enclosures) =>
+                res
+                    .status(200)
+                    .json({ message: 'Liste des enclos', enclosures })
+            )
+            .catch((error) => {
+                res.status(500).json({ error });
+                Logging.error(NAMESPACE, error);
+            });
+    } else {
+        return Enclosure.find({ zone: zoneId })
+            .then((enclosures) =>
+                enclosures
+                    ? res
+                          .status(200)
+                          .json({ message: 'Enclos trouvés', enclosures })
+                    : res.status(404).json({ message: 'Enclos non trouvé' })
+            )
+            .catch((error) => {
+                res.status(500).json({ error });
+                Logging.error(NAMESPACE, error);
+            });
+    }
+};
+
 const updateEnclosure = (req: Request, res: Response, next: NextFunction) => {
     const enclosureId = req.params.enclosureId;
 
@@ -206,6 +240,7 @@ export default {
     createEnclosure,
     getEnclosure,
     getAllEnclosure,
+    getEnclosuresByZone,
     updateEnclosure,
     deleteEnclosure,
     checkEnclosure

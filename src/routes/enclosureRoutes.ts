@@ -25,16 +25,25 @@ router.get(
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
     controller.getEnclosure
 );
+
 router.get(
     '/get',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
     controller.getAllEnclosure
 );
+
+router.get(
+    '/get/zone/:zoneId',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getEnclosuresByZone
+);
+
 router.put(
     '/update/:enclosureId',
     extractJWT('Admin'),
     controller.updateEnclosure
 );
+
 router.delete(
     '/delete/:enclosureId',
     extractJWT('Admin'),
