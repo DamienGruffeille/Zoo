@@ -12,11 +12,25 @@ router.post(
     validationMiddleware(validate.register),
     controller.createSpecie
 );
+
 router.get(
     '/get/:specieId',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
     controller.getSpecie
 );
+
+router.get(
+    '/get/enclos/:enclos',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getSpecieByEnclosure
+);
+
+router.get(
+    '/get/zone/:zone',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getSpeciesByZone
+);
+
 router.get(
     '/get',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),

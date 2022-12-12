@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import Enclosure from './enclosure.interface';
 
 export default interface ISpecie extends Document {
     _id: string;
@@ -6,5 +7,5 @@ export default interface ISpecie extends Document {
     sociable: boolean;
     observations: string[];
     dangerous: boolean;
-    enclosure: object;
+    enclosure: Enclosure;
 }

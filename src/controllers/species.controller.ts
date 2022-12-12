@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import Logging from '../library/logging';
+import Enclosure from '../model/enclosure.model';
 import Specie from '../model/specie.model';
 import Animal from '../model/animal.model';
 import { Error } from 'mongoose';
@@ -49,8 +50,48 @@ const getSpecie = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
+const getSpecieByEnclosure = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const enclos = req.params.enclos;
+    console.log(enclos);
+    return Specie.find({ enclosure: enclos })
+        .populate('enclosure')
+        .then((species) =>
+            species
+                ? res.status(200).json({ message: 'Espèce trouvée', species })
+                : res.status(404).json({ message: 'Espèce non trouvée' })
+        )
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
+};
+
+const getSpeciesByZone = (req: Request, res: Response, next: NextFunction) => {
+    const zone = req.params.zone;
+    console.log(zone);
+    return Specie.aggregate([
+        {
+            $lookup: {
+                from: Enclosure.collection.name,
+                localField: 'enclosure',
+                foreignField: '_id',
+                as: 'enclosure'
+            }
+        },
+        { $unwind: '$enclosure' },
+        { $match: { 'enclosure.zone': zone } }
+    ])
+        .then((species) => res.status(200).json(species))
+        .catch((err) => res.status(500).json(err));
+};
+
 const getAllSpecies = (req: Request, res: Response, next: NextFunction) => {
     return Specie.find()
+        .populate('enclosure')
         .then((species) =>
             res.status(200).json({ message: 'Liste des espèces', species })
         )
@@ -509,6 +550,8 @@ const stimulateSpecie = async (
 export default {
     createSpecie,
     getSpecie,
+    getSpecieByEnclosure,
+    getSpeciesByZone,
     getAllSpecies,
     updateSpecie,
     deleteSpecie,
