@@ -71,7 +71,7 @@ const register = Joi.object({
         )
         .required(),
 
-    animal: Joi.string().required(),
+    animal: Joi.required(),
 
     eventType: Joi.string()
         .valid(
@@ -93,4 +93,24 @@ const register = Joi.object({
     observations: Joi.array().allow('').required()
 });
 
-export default { register };
+const getLastEvent = Joi.object({
+    _id: Joi.string().required(),
+    eventType: Joi.string()
+        .valid(
+            'Entrée',
+            'Sortie',
+            'Nourrissage',
+            'Soins',
+            'Stimulation',
+            'Naissance',
+            'Décès',
+            'Départ',
+            'Arrivée',
+            'Bagarre',
+            'Accident',
+            'Vérification'
+        )
+        .required()
+});
+
+export default { register, getLastEvent };

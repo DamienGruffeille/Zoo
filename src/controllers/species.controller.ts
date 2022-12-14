@@ -153,6 +153,8 @@ const takeSpecieOutside = async (
     const specieId = req.body._id;
     const stillInsideAnimals = req.body.stillInsideAnimals;
 
+    Logging.info(NAMESPACE, stillInsideAnimals);
+
     if (!stillInsideAnimals) {
         Logging.warn(
             NAMESPACE,

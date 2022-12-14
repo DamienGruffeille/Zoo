@@ -299,6 +299,59 @@ const getEventsBySpecie = async (
     }
 };
 
+const getLastEventBySpecie = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const specieId = req.body._id;
+    const eventType = req.body.eventType;
+
+    try {
+        const specie = await Specie.findById(specieId).exec();
+
+        if (!specie) {
+            Logging.info(NAMESPACE, 'Espèce inexistante : ' + specieId);
+            return res.status(404).json({
+                message: 'Espèce inexistante : ' + specieId
+            });
+        }
+
+        const events = await Event.findOne({
+            specie: specieId,
+            eventType: eventType
+        })
+            .sort({ createdAt: -1 })
+            .exec();
+
+        if (!events) {
+            Logging.info(
+                NAMESPACE,
+                "Aucun évènement pour l'espèce : " + specie.name
+            );
+            return res.status(200).json({
+                message: "Aucun évènement pour l'espèce : " + specie.name
+            });
+        }
+
+        Logging.info(
+            NAMESPACE,
+            "Evenements pour l'espèce " + specie.name + ' : ' + events
+        );
+        return res.status(200).json({
+            message: "Evènements pour l'espèce " + specie.name + ' : ',
+            events
+        });
+    } catch (error) {
+        return res.status(404).json({
+            message:
+                "Impossible de récupérer les évènements de l'espèce :  " +
+                specieId,
+            error
+        });
+    }
+};
+
 const getEventsByAnimal = async (
     req: Request,
     res: Response,
@@ -350,6 +403,7 @@ export default {
     createEvent,
     getEventsByZone,
     getEventsByEnclosure,
+    getLastEventBySpecie,
     getEventsBySpecie,
     getEventsByAnimal
 };

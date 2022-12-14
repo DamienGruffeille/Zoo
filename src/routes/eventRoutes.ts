@@ -26,6 +26,13 @@ router.get(
 );
 
 router.get(
+    '/especes/last',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    validationMiddleware(validate.getLastEvent),
+    controller.getLastEventBySpecie
+);
+
+router.get(
     '/especes/:id',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
     controller.getEventsBySpecie
