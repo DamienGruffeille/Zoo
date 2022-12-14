@@ -27,6 +27,12 @@ router.get(
 );
 
 router.get(
+    '/get/specie/:specieId',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getAnimalsBySpecie
+);
+
+router.get(
     '/get',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
     controller.getAllAnimals

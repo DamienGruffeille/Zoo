@@ -53,6 +53,23 @@ const getAnimal = (req: Request, res: Response, next: NextFunction) => {
     );
 };
 
+const getAnimalsBySpecie = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const specieId = req.params.specieId;
+
+    return Animal.find({ specie: specieId })
+        .then((animals) =>
+            res.status(200).json({ message: 'Liste des animaux', animals })
+        )
+        .catch((error) => {
+            res.status(500).json({ error });
+            Logging.error(NAMESPACE, error);
+        });
+};
+
 const getAllAnimals = (req: Request, res: Response, next: NextFunction) => {
     return Animal.find()
         .then((animals) =>
@@ -349,6 +366,7 @@ const healAnimal = async (req: Request, res: Response, next: NextFunction) => {
 export default {
     createAnimal,
     getAnimal,
+    getAnimalsBySpecie,
     getAllAnimals,
     updateAnimal,
     deleteAnimal,
