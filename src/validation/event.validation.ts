@@ -94,23 +94,10 @@ const register = Joi.object({
 });
 
 const getLastEvent = Joi.object({
-    _id: Joi.string().required(),
-    eventType: Joi.string()
-        .valid(
-            'Entrée',
-            'Sortie',
-            'Nourrissage',
-            'Soins',
-            'Stimulation',
-            'Naissance',
-            'Décès',
-            'Départ',
-            'Arrivée',
-            'Bagarre',
-            'Accident',
-            'Vérification'
-        )
-        .required()
+    params: Joi.object({
+        _id: Joi.string().required(),
+        eventType: Joi.string().required()
+    })
 });
 
 export default { register, getLastEvent };

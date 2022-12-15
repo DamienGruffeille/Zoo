@@ -304,8 +304,10 @@ const getLastEventBySpecie = async (
     res: Response,
     next: NextFunction
 ) => {
-    const specieId = req.body._id;
-    const eventType = req.body.eventType;
+    const specieId = req.query._id;
+    const eventType = req.query.eventType;
+
+    Logging.info(NAMESPACE, specieId + ' ' + eventType);
 
     try {
         const specie = await Specie.findById(specieId).exec();
