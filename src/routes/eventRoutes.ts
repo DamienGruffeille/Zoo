@@ -14,6 +14,12 @@ router.post(
 );
 
 router.get(
+    '/get',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getEvents
+);
+
+router.get(
     '/zones/:id',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
     controller.getEventsByZone

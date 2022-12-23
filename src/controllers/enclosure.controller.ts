@@ -67,8 +67,10 @@ const getEnclosuresByZone = (
     next: NextFunction
 ) => {
     const zoneId = req.params.zoneId;
+    console.log('Zone Id: ' + zoneId);
 
     if (zoneId === 'toutes') {
+        console.log('zone1 = toutes');
         return Enclosure.find()
             .then((enclosures) =>
                 res
@@ -80,6 +82,7 @@ const getEnclosuresByZone = (
                 Logging.error(NAMESPACE, error);
             });
     } else {
+        console.log('zone2 : ' + zoneId);
         return Enclosure.find({ zone: zoneId })
             .then((enclosures) =>
                 enclosures

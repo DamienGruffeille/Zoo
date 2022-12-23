@@ -21,4 +21,18 @@ const createZone = (req: Request, res: Response, next: NextFunction) => {
         });
 };
 
-export default { createZone };
+const getZones = (req: Request, res: Response, next: NextFunction) => {
+    const zoneId = req.params.zone;
+
+    if (zoneId === 'toutes') {
+        return Zone.find()
+            .then((zones) => res.status(200).json({ zones }))
+            .catch((error) => res.status(500).json({ error }));
+    } else {
+        return Zone.find({ _id: zoneId })
+            .then((zones) => res.status(200).json({ zones }))
+            .catch((error) => res.status(500).json({ error }));
+    }
+};
+
+export default { createZone, getZones };

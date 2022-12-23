@@ -13,4 +13,10 @@ router.post(
     controller.createZone
 );
 
+router.get(
+    '/get/:zone',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getZones
+);
+
 export = router;

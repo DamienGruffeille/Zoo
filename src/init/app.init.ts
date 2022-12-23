@@ -62,7 +62,7 @@ const createApp = () => {
     /** Routes */
     app.use('/api/test', testRoutes);
     app.use('/api/employes', employeeRoutes);
-    app.use('/api/zone', zoneRoutes);
+    app.use('/api/zones', zoneRoutes);
     app.use('/api/enclos', enclosureRoutes);
     app.use('/api/vivariums', vivariumRoutes);
     app.use('/api/bassins', pondRoutes);

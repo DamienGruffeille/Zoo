@@ -143,6 +143,14 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
+const getEvents = async (req: Request, res: Response, next: NextFunction) => {
+    return Event.find()
+        .populate('enclosure')
+        .sort({ createdAt: -1 })
+        .then((events) => res.status(200).json({ events }))
+        .catch((error) => res.status(500).json({ error }));
+};
+
 const getEventsByZone = async (
     req: Request,
     res: Response,
@@ -174,7 +182,10 @@ const getEventsByZone = async (
         }
 
         // Récupération des évènements liés à la zone demandée
-        const events = await Event.find({ enclosure: { $in: enclos } }).exec();
+        const events = await Event.find({ enclosure: { $in: enclos } })
+            .populate('enclosure')
+            .sort({ createdAt: -1 })
+            .exec();
 
         // S'il n'y a aucun évènement, envoi d'une reponse OK indiquant qu'aucun évènement n'existe pour cette zone
         if (events.length === 0) {
@@ -223,7 +234,9 @@ const getEventsByEnclosure = async (
             });
         }
 
-        const events = await Event.find({ enclosure: enclosureId }).exec();
+        const events = await Event.find({ enclosure: enclosureId })
+            .populate('enclosure')
+            .exec();
 
         if (events.length === 0) {
             Logging.info(
@@ -269,7 +282,9 @@ const getEventsBySpecie = async (
             });
         }
 
-        const events = await Event.find({ specie: specieId }).exec();
+        const events = await Event.find({ specie: specieId })
+            .populate('enclosure')
+            .exec();
 
         if (events.length === 0) {
             Logging.info(
@@ -371,7 +386,9 @@ const getEventsByAnimal = async (
             });
         }
 
-        const events = await Event.find({ animal: animalId }).exec();
+        const events = await Event.find({ animal: animalId })
+            .populate('enclosure')
+            .exec();
 
         if (events.length === 0) {
             Logging.info(
@@ -403,6 +420,7 @@ const getEventsByAnimal = async (
 
 export default {
     createEvent,
+    getEvents,
     getEventsByZone,
     getEventsByEnclosure,
     getLastEventBySpecie,

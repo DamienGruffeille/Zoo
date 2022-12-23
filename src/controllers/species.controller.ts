@@ -56,7 +56,6 @@ const getSpecieByEnclosure = (
     next: NextFunction
 ) => {
     const enclos = req.params.enclos;
-    console.log(enclos);
     return Specie.find({ enclosure: enclos })
         .populate('enclosure')
         .then((species) =>
@@ -72,7 +71,6 @@ const getSpecieByEnclosure = (
 
 const getSpeciesByZone = (req: Request, res: Response, next: NextFunction) => {
     const zone = req.params.zone;
-    console.log(zone);
     return Specie.aggregate([
         {
             $lookup: {
@@ -402,7 +400,6 @@ const feedSpecie = async (req: Request, res: Response, next: NextFunction) => {
         animals.forEach((animal) => {
             animalArray.push(animal._id);
         });
-
         if (req.headers.authorization) {
             Logging.info(NAMESPACE, 'Le header a bien été envoyé');
 
