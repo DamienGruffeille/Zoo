@@ -100,6 +100,16 @@ const createAction = async (
     }
 };
 
+const getAllActions = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const actions = await Action.find().exec();
+
+    return res.status(200).json({ actions });
+};
+
 const getActionsByZone = async (
     req: Request,
     res: Response,
@@ -301,10 +311,59 @@ const getActionsByAnimal = async (
     }
 };
 
+const getNextAction = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const employeeId = req.params.employeeId;
+
+        const action = await Action.findOne({
+            createdBy: employeeId,
+            status: 'Planifiée'
+        })
+            .sort({ plannedDate: 1 })
+            .exec();
+
+        if (!action) {
+            return null;
+        }
+
+        return res.status(200).json({ action });
+    } catch (error) {
+        return res.status(404).json({
+            message: 'impossible de récupérer la prochaine action',
+            error
+        });
+    }
+};
+
+const updateAction = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const actionId = req.params.actionId;
+
+    const actionUpdated = await Action.findByIdAndUpdate(
+        actionId,
+        { status: 'Terminée' },
+        { new: true }
+    ).exec();
+
+    console.log('actionupdated : ' + actionUpdated);
+
+    return actionUpdated;
+};
+
 export default {
     createAction,
+    getAllActions,
     getActionsByZone,
     getActionsByEnclosure,
     getActionsBySpecie,
-    getActionsByAnimal
+    getActionsByAnimal,
+    getNextAction,
+    updateAction
 };
