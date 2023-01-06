@@ -20,6 +20,12 @@ router.get(
 );
 
 router.get(
+    '/employe/:employeeName',
+    extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
+    controller.getActionsByEmployee
+);
+
+router.get(
     '/zones/:id',
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
     controller.getActionsByZone
@@ -50,7 +56,7 @@ router.get(
 );
 
 router.put(
-    `/update/:actionId`,
+    `/update`,
     extractJWT('Soigneur', 'Responsable', 'Vétérinaire', 'Admin'),
     controller.updateAction
 );

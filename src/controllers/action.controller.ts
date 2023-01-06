@@ -110,6 +110,20 @@ const getAllActions = async (
     return res.status(200).json({ actions });
 };
 
+const getActionsByEmployee = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const employeeName = req.params.employeeName;
+
+    const actions = await Action.find({ createdBy: employeeName }).exec();
+
+    console.log('Actions : ' + actions);
+
+    return res.status(200).json({ actions });
+};
+
 const getActionsByZone = async (
     req: Request,
     res: Response,
@@ -234,7 +248,9 @@ const getActionsBySpecie = async (
             });
         }
 
-        const actions = await Action.find({ specie: specieId }).exec();
+        const actions = await Action.find({ specie: specieId })
+            .sort({ createdAt: -1 })
+            .exec();
 
         if (actions.length === 0) {
             Logging.info(
@@ -344,22 +360,25 @@ const updateAction = async (
     res: Response,
     next: NextFunction
 ) => {
-    const actionId = req.params.actionId;
+    const actionId = req.body._id;
 
-    const actionUpdated = await Action.findByIdAndUpdate(
-        actionId,
+    const actionUpdated = await Action.findOneAndUpdate(
+        { _id: actionId },
         { status: 'Terminée' },
         { new: true }
-    ).exec();
+    )
+        .orFail()
+        .exec();
 
     console.log('actionupdated : ' + actionUpdated);
 
-    return actionUpdated;
+    return res.status(200).json({ actionUpdated });
 };
 
 export default {
     createAction,
     getAllActions,
+    getActionsByEmployee,
     getActionsByZone,
     getActionsByEnclosure,
     getActionsBySpecie,

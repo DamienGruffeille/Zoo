@@ -236,6 +236,7 @@ const getEventsByEnclosure = async (
 
         const events = await Event.find({ enclosure: enclosureId })
             .populate('enclosure')
+            .sort({ createdAt: -1 })
             .exec();
 
         if (events.length === 0) {
@@ -284,6 +285,7 @@ const getEventsBySpecie = async (
 
         const events = await Event.find({ specie: specieId })
             .populate('enclosure')
+            .sort({ createdAt: -1 })
             .exec();
 
         if (events.length === 0) {
@@ -388,6 +390,7 @@ const getEventsByAnimal = async (
 
         const events = await Event.find({ animal: animalId })
             .populate('enclosure')
+            .sort({ createdAt: -1 })
             .exec();
 
         if (events.length === 0) {
