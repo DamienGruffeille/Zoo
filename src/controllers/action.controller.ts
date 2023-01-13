@@ -115,13 +115,18 @@ const getActionsByEmployee = async (
     res: Response,
     next: NextFunction
 ) => {
-    const employeeName = req.params.employeeName;
+    try {
+        const employeeName = req.params.employeeName;
+        console.log('Employé : ' + employeeName);
 
-    const actions = await Action.find({ createdBy: employeeName }).exec();
+        const actions = await Action.find({ createdBy: employeeName }).exec();
 
-    console.log('Actions : ' + actions);
+        console.log('Actions : ' + actions);
 
-    return res.status(200).json({ actions });
+        return res.status(200).json({ actions });
+    } catch (error) {
+        return res.status(404).json({ message: error });
+    }
 };
 
 const getActionsByZone = async (

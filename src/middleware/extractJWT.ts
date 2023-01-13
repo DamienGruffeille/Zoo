@@ -19,10 +19,11 @@ const extractJWT = (...allowedRoles: string[]) => {
 
         /** S'il y a un token... */
         if (token) {
-            Logging.info(NAMESPACE, 'Vérification du token');
+            Logging.info(NAMESPACE, 'Vérification du token : ' + token);
             /** Je vérifie son intégrité grâce au secret */
             jwt.verify(token, config.jwt.secret, async (error, decoded) => {
                 if (error) {
+                    Logging.error(NAMESPACE, 'Token non valide');
                     return res
                         .status(404)
                         .json({ message: error.message, error });
